@@ -43,9 +43,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         stats.getStepsCount(10)
         stats.add(10)
 
-        Stat.stats = stats
-        Stat.m = 0
-        Stat.d = 1
+        Stat.data1 = stats
+        Stat.data2 = arrayListOf(0, 1)
         startActivity(Intent(this, Stat::class.java))
         return
 

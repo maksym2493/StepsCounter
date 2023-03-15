@@ -58,6 +58,7 @@ data class Day(var s: String){
 class Stats(var path: File) {
     private var time: Long? = null
     private var count: Int? = null
+    private var target: Int? = null
     private var stats: ArrayList<Month> = ArrayList<Month>()
 
     private var stepsCount: Int? = null
@@ -65,6 +66,7 @@ class Stats(var path: File) {
 
     init{
         if(f.exists()){
+            target = 10000
             time = get_start_time()
             count = ((Date().time - time!!) / 3600000).toInt()
 
@@ -75,11 +77,9 @@ class Stats(var path: File) {
             var data = f.readText().split("\n")
             var text = data[0].split(" ")
 
-            System.out.println(data)
-            System.out.println(text)
-
             time = text[0].toLong()
             count = text[1].toInt()
+            target = text[2].toInt()
 
             data.subList(1, data.size).forEach{ stats.add(Month(it)) }
         }
@@ -145,6 +145,17 @@ class Stats(var path: File) {
         return nextMonth
     }
 
+    fun getTarget(m: Int? = null, d: Int? = null): Float{
+        if(d != null){ return target!!.toFloat() }
+        if(m != null){ return (getMaxSize(m) * target!!).toFloat() }
+
+        var size = 0
+        var times = stats.size
+        do{ size += getSize(times - 1) } while(--times != 0)
+
+        return (size * target!!).toFloat()
+    }
+
     fun getTime(m: Int? = null, d: Int? = null, h: Int? = null): String{
         var m = m
         var t = time!! - if(d != null){ (3600 * 24 * d) * 1000 } else{ 0 } - if(h != null){ (3600 * h) * 1000 } else{ 0 }
@@ -154,7 +165,7 @@ class Stats(var path: File) {
     }
 
     fun write(){
-        var text = time.toString() + " " + count.toString() + "\n"
+        var text = time.toString() + " " + count.toString()+ " " + target.toString() + "\n"
         stats.forEach{ text += it.toString() + "\n" }
 
         f.writeText(text.substring(0, text.length - 1))
