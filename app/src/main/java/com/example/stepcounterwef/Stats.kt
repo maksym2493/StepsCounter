@@ -136,13 +136,13 @@ class Stats(var path: File) {
 
         var date = Date().toString().split(" ")
 
-        var next_month = 28
-        var cur_month = date[1]
-        var t = time!! + (next_month - date[2].toInt()) * 3600 * 24 * 1000
+        var nextMonth = 28
+        var curMonth = date[1]
+        var t = time!! + (nextMonth - date[2].toInt()) * 3600 * 24 * 1000
 
-        while(Date(t).toString().split(" ")[1] != cur_month){ next_month += 1; t += 3600 * 24 * 1000 }
+        while(Date(t).toString().split(" ")[1] == curMonth){ nextMonth += 1; t += 3600 * 24 * 1000 }
 
-        return next_month
+        return nextMonth
     }
 
     fun getTime(m: Int? = null, d: Int? = null, h: Int? = null): String{
