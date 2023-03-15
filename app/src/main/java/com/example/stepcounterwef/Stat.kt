@@ -83,7 +83,7 @@ class Stat: AppCompatActivity() {
                     view.setOnClickListener(Listener(this@Stat, stats, args[0], args[1], args[2]))
 
                     args[index] = size - arg - 1
-                    button.text = stats.getTime(args[0]!!, args[1], args[2]) + " — " + value.toString()
+                    button.text = stats.getTime(args[0]!!, args[1], args[2]) + " — " + stats!!.getCount(args[0]!!, args[1], args[2]).toString()
                     view.layoutParams.height = (diagram.layoutParams.height * (value / maxValue)).toInt() + 1
 
                     if(button.visibility == Button.GONE){ button.visibility = Button.VISIBLE }

@@ -65,14 +65,14 @@ class Stats(var path: File) {
     private var f = File(path, "stats.txt")
 
     init{
-        if(!f.exists()){
+        if(f.exists()){
             target = 10000
             time = get_start_time()
             count = ((Date().time - time!!) / 3600000).toInt()
 
             time = time!! + count!! * 3600000
 
-            stats.add(Month("0  0 0"))
+            stats.add(Month("6  3 9 2 3  3 2 3 4 6 1  4 6 5 2 4 8 1 9 2"))
         } else{
             var data = f.readText().split("\n")
             var text = data[0].split(" ")
