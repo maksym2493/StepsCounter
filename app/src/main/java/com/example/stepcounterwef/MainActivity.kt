@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         stats.add(10)
 
         Stat.data1 = stats
-        Stat.data2 = arrayListOf(0, 1)
+        Stat.data2 = arrayListOf(0, 0)
         startActivity(Intent(this, Stat::class.java))
         return
 

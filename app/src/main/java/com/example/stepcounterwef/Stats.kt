@@ -65,14 +65,14 @@ class Stats(var path: File) {
     private var f = File(path, "stats.txt")
 
     init{
-        if(f.exists()){
+        if(!f.exists()){
             target = 10000
             time = get_start_time()
             count = ((Date().time - time!!) / 3600000).toInt()
 
             time = time!! + count!! * 3600000
 
-            stats.add(Month("2  1 0 1  1 1 12"))
+            stats.add(Month("0  0 0"))
         } else{
             var data = f.readText().split("\n")
             var text = data[0].split(" ")
@@ -159,7 +159,7 @@ class Stats(var path: File) {
     fun getTime(m: Int? = null, d: Int? = null, h: Int? = null): String{
         var m = m
         var t = time!! - if(d != null){ (3600 * 24 * d) * 1000 } else{ 0 } - if(h != null){ (3600 * h) * 1000 } else{ 0 }
-        if(m != null){ while(m != 0){ System.out.println(m); t -= stats[m].getSize() * (3600 * 24) * 1000; m -= 1 } }
+        if(m != null){ while(m != 0){ t -= stats[m].getSize() * (3600 * 24) * 1000; m -= 1 } }
 
         return Date(t).toString().substring(0, 13)
     }

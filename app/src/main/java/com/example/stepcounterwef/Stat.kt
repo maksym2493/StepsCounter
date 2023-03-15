@@ -29,12 +29,13 @@ class Stat: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityStatBinding.inflate(layoutInflater)
-
-        setContentView(binding.root); start(data1, data2[0], data2[1])
+        start(data1, data2[0], data2[1])
     }
 
     fun start(lS: Stats, lM: Int?, lD: Int?){
+        binding = ActivityStatBinding.inflate(layoutInflater)
+        setContentView(binding.root);
+
         m = lM
         d = lD
 
@@ -49,8 +50,8 @@ class Stat: AppCompatActivity() {
 
         with(binding){
             var i = 0
+            var count = 31
             var maxValue = 1f
-            var count = diagram.childCount - 1
 
             args[index] = 0
             while(i++ < size){
@@ -67,8 +68,8 @@ class Stat: AppCompatActivity() {
             var date = stats.getTime(args[0]!!, args[1], args[2])
             headline.text = date.substring(0, date.lastIndexOf(" "))
             if(m == null){ left.visibility = View.GONE; right.visibility = View.GONE } else{
-                if((d == null && m == 0) || (d != null && d == 0)){ left.visibility = View.GONE } else{ left.setOnClickListener(Listener2(this@Stat, stats, arrayListOf<Int?>(m, d), index, -1)); left.text = "<-"; if(left.visibility == View.GONE){ left.visibility = View.VISIBLE } }
-                if((d == null && m == parentSize) || (d != null && d == parentSize)){ right.visibility = View.GONE } else{ right.setOnClickListener(Listener2(this@Stat, stats, arrayListOf<Int?>(m, d), index, 1)); right.text = "->"; if(right.visibility == View.GONE){ right.visibility = View.VISIBLE } }
+                if((d == null && m == 0) || (d != null && d == 0)){ right.visibility = View.GONE } else{ right.setOnClickListener(Listener2(this@Stat, stats, arrayListOf<Int?>(m, d), index, -1)); right.text = "->"; if(right.visibility == View.GONE){ right.visibility = View.VISIBLE } }
+                if((d == null && m == parentSize) || (d != null && d == parentSize)){ left.visibility = View.GONE } else{ left.setOnClickListener(Listener2(this@Stat, stats, arrayListOf<Int?>(m, d), index, 1)); left.text = "<-"; if(left.visibility == View.GONE){ left.visibility = View.VISIBLE } }
             }
 
             do{
@@ -83,10 +84,9 @@ class Stat: AppCompatActivity() {
 
                     args[index] = size - arg - 1
                     button.text = stats.getTime(args[0]!!, args[1], args[2]) + " — " + value.toString()
-
                     view.layoutParams.height = (diagram.layoutParams.height * (value / maxValue)).toInt() + 1
 
-                    if(button.visibility == Button.GONE){ button.visibility == Button.VISIBLE }
+                    if(button.visibility == Button.GONE){ button.visibility = Button.VISIBLE }
                     if(view.visibility == View.GONE || view.visibility == View.INVISIBLE) { view.visibility = View.VISIBLE }
 
                     args[index] = arg - 1

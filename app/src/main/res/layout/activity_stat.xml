@@ -28,7 +28,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/view31"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -39,7 +38,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view32"
             app:layout_constraintStart_toEndOf="@+id/view30"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -50,7 +48,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view31"
             app:layout_constraintStart_toEndOf="@+id/view29"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -61,7 +58,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view30"
             app:layout_constraintStart_toEndOf="@+id/view28"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -72,7 +68,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view29"
             app:layout_constraintStart_toEndOf="@+id/view27"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -83,7 +78,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view28"
             app:layout_constraintStart_toEndOf="@+id/view26"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -94,7 +88,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view27"
             app:layout_constraintStart_toEndOf="@+id/view25"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -105,7 +98,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view26"
             app:layout_constraintStart_toEndOf="@+id/view24"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -116,7 +108,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view25"
             app:layout_constraintStart_toEndOf="@+id/view23"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -127,7 +118,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view24"
             app:layout_constraintStart_toEndOf="@+id/view22"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -138,7 +128,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view23"
             app:layout_constraintStart_toEndOf="@+id/view21"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -149,7 +138,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view22"
             app:layout_constraintStart_toEndOf="@+id/view20"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -160,7 +148,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view21"
             app:layout_constraintStart_toEndOf="@+id/view19"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -171,7 +158,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view20"
             app:layout_constraintStart_toEndOf="@+id/view18"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -182,7 +168,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view19"
             app:layout_constraintStart_toEndOf="@+id/view17"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -193,7 +178,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view18"
             app:layout_constraintStart_toEndOf="@+id/view16"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -204,7 +188,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view17"
             app:layout_constraintStart_toEndOf="@+id/view15"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -215,7 +198,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view16"
             app:layout_constraintStart_toEndOf="@+id/view14"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -226,7 +208,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view15"
             app:layout_constraintStart_toEndOf="@+id/view13"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -237,7 +218,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view14"
             app:layout_constraintStart_toEndOf="@+id/view12"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -248,7 +228,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view13"
             app:layout_constraintStart_toEndOf="@+id/view11"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -259,7 +238,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view12"
             app:layout_constraintStart_toEndOf="@+id/view10"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -270,7 +248,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view11"
             app:layout_constraintStart_toEndOf="@+id/view9"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -281,7 +258,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view10"
             app:layout_constraintStart_toEndOf="@+id/view8"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -292,7 +268,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view9"
             app:layout_constraintStart_toEndOf="@+id/view7"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -303,7 +278,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view8"
             app:layout_constraintStart_toEndOf="@+id/view6"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -314,7 +288,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view7"
             app:layout_constraintStart_toEndOf="@+id/view5"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -325,7 +298,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view6"
             app:layout_constraintStart_toEndOf="@+id/view4"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1" />
 
         <View
@@ -335,9 +307,7 @@
             android:background="#000000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view5"
-            app:layout_constraintStart_toEndOf="@+id/view3"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1" />
+            app:layout_constraintStart_toEndOf="@+id/view3" />
 
         <View
             android:id="@+id/view3"
@@ -346,9 +316,7 @@
             android:background="#000000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view4"
-            app:layout_constraintStart_toEndOf="@+id/view2"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1" />
+            app:layout_constraintStart_toEndOf="@+id/view2" />
 
 
         <View
@@ -358,9 +326,7 @@
             android:background="#000000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/view3"
-            app:layout_constraintStart_toEndOf="@+id/view1"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1" />
+            app:layout_constraintStart_toEndOf="@+id/view1" />
 
         <View
             android:id="@+id/view1"
@@ -369,9 +335,7 @@
             android:background="#000000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1" />
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
