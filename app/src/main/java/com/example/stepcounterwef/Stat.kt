@@ -4,12 +4,14 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.stepcounterwef.databinding.ActivityStatBinding
 import java.util.*
 
 class Stat: AppCompatActivity() {
+    private var e = false
     private var m: Int? = null
     private var d: Int? = null
 
@@ -27,6 +29,9 @@ class Stat: AppCompatActivity() {
     }
 
     fun update(){ start(stats, m, d) }
+
+    fun changeE(){ e = !e }
+    fun getE(): Boolean{ return e }
 
     fun start(lS: Stats, lM: Int?, lD: Int?) {
         binding = ActivityStatBinding.inflate(layoutInflater)
@@ -57,13 +62,15 @@ class Stat: AppCompatActivity() {
         } - 1
 
         with(binding) {
+            var screenWidth = (windowManager.defaultDisplay.width - 20 * diagram.layoutParams.height / 200f).toInt()
+
             var i = 0
             var count = 31
             var maxValue = 1f
 
             args[index] = 0
             while (i++ < size) {
-                var value = stats!!.getCount(args[0]!!, args[1], args[2])
+                var value = stats.getCount(args[0]!!, args[1], args[2])
 
                 args[index] = args[index]!! + 1
                 if (value > maxValue) {
@@ -113,17 +120,23 @@ class Stat: AppCompatActivity() {
 
             var value = stats.getCount(m, d)
             var percent = value / target
-            progressValue.text = round(percent * 100) + " %"
-            progressBar.layoutParams.width = (progressBar.layoutParams.width * percent).toInt()
-            averageAndMax.text = "Максимум кроків: " + maxValue.toInt().toString() + "\nСередня кількість: " + round(value / size.toFloat()) + "."
+            var width = screenWidth!! * percent
+
+            if(width >= 1){
+                progressBar.setBackgroundColor(Color.parseColor(getRandomColor()))
+                progressBar.layoutParams.width = if(percent < 1){ width.toInt() } else{ screenWidth!! }
+            } else{ progressBar.visibility = View.INVISIBLE }
+
+            progressValue.text = "Прогрес: " + round(percent * 100) + " %"
+            averageAndMax.text = "Максимум кроків: " + maxValue.toInt().toString() + ".\nСередня кількість: " + round(value / size.toFloat()) + "."
+
+            diagramsBack.text = "Назад"
+            diagramsBack.setOnClickListener(Listener2(this@Stat, stats, if(d != null){ arrayListOf(m, null) } else{ arrayListOf(null, null) }))
 
             do {
                 var view = diagram.getChildAt(count)
-                var progressView = progressBars.getChildAt(31 - count)
-                var button = findViewById<Button>(buttons.getChildAt(31 - count).id)
-
-                //Підлаштовуємо розмір вьюшки під розмір кнопки.
-                progressView.layoutParams.height = button.layoutParams.height
+                var progressView = buttons.getChildAt(31 - count)
+                var button = findViewById<TextView>(buttons.getChildAt(63 - count).id)
 
                 if (args[index]!! > -1) {
                     // Збергаємо змінний параметр. В діаграммі значення виставляються обернено кнопкам (1 значення: остання вьюшка, перша кнопка і перша прогресс вьшка.)
@@ -139,13 +152,12 @@ class Stat: AppCompatActivity() {
 
                     //Отримуємо реверсивне змінне значення.
                     args[index] = size - arg - 1
-                    button.text = stats.getTime(args[0], args[1], args[2]) + " — " + stats!!.getCount(args[0]!!, args[1], args[2]).toString()
+                    button.text = stats.getTime(args[0], args[1], args[2]) + " — " + stats.getCount(args[0]!!, args[1], args[2]).toString()
                     if(index != 2){ button.setOnClickListener(Listener2(this@Stat, stats, arrayListOf(args[0], args[1]))) }
 
-                    //Діленням значення на ціль отримуємо відсоток виконання цілі, після чого міняємо ширину відповідно відсотку. За максимум беремо MATCH_PARENT.
-                    value = (progressBars.layoutParams.width * (stats.getCount(args[0], args[1], args[2]) / stats.getTarget(args[0], args[1], args[2]))).toInt()
+                    value = (screenWidth!! * (stats.getCount(args[0], args[1], args[2]) / stats.getTarget(args[0], args[1], args[2]))).toInt()
                     if (value != 0) {
-                        progressView.layoutParams.width = value;
+                        progressView.layoutParams.width = value
                         if (progressView.visibility == View.GONE || progressView.visibility == View.INVISIBLE) { progressView.visibility = View.VISIBLE }
 
                     } else { progressView.visibility = View.INVISIBLE }
@@ -195,10 +207,9 @@ class Stat: AppCompatActivity() {
         var x = x * y
 
         var add = 0
-
         (x - x.toInt()).toString().substring(2).forEach{ if(it != '4'){ return@forEach }; if(it == '5'){ add = 1; return@forEach } }
 
-        return ((x + add) / y).toString()
+        return ((x.toInt() + add) / y).toString()
     }
 }
 
@@ -211,10 +222,10 @@ class Listener(val stat: Stat, var stats: Stats, val arg1: Int? = null, val arg2
 class Listener2(var parent: Stat, var arg1: Stats, var arg2: ArrayList<Int?>, var index: Int? = null, var add: Int? = null): View.OnClickListener{
     override fun onClick(p0: View?) {
         if(index != null){
-            index = index!! + 1
+            index = index!! - 1
             arg2[index!!] = arg2[index!!]!! + add!!
         }
 
-        parent.start(arg1, arg2[0], arg2[1])
+        if(arg2[0] != null || arg2[0] != null){ if(parent.getE()){ parent.changeE() }; parent.start(arg1, arg2[0], arg2[1]) } else{ if(parent.getE()){ parent.finish() } else{ parent.changeE(); parent.start(arg1, arg2[0], arg2[1]) } }
     }
 }

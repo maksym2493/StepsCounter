@@ -8,7 +8,6 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.Build
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
@@ -16,10 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.io.File
-import java.lang.Math.pow
 import java.lang.System.exit
-import java.sql.Time
-import java.util.*
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var stats: Stats
@@ -40,11 +36,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         level = Level(filesDir)
         stats = Stats(filesDir)
 
-        stats.getStepsCount(10)
-        stats.add(10)
-
         Stat.data1 = stats
-        Stat.data2 = arrayListOf(0, 0)
+        Stat.data2 = arrayListOf(null, null)
         startActivity(Intent(this, Stat::class.java))
         return
 

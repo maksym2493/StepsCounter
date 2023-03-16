@@ -72,7 +72,7 @@ class Stats(var path: File) {
 
             time = time!! + count!! * 3600000
 
-            stats.add(Month("6  3 9 2 3  3 2 3 4 6 1  4 6 5 2 4 8 1 9 2"))
+            stats.add(Month("6  10 100 2 3  16 2 3 4 6 1  37 6 5 2 4 8 1 9 2"))
         } else{
             var data = f.readText().split("\n")
             var text = data[0].split(" ")
