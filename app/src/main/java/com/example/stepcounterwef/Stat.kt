@@ -1,19 +1,13 @@
 package com.example.stepcounterwef
 
-import android.content.Context
-import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.example.stepcounterwef.databinding.ActivityStatBinding
-import kotlinx.coroutines.NonDisposableHandle.parent
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.math.max
 
 class Stat: AppCompatActivity() {
     private var m: Int? = null
@@ -32,7 +26,9 @@ class Stat: AppCompatActivity() {
         start(data1, data2[0], data2[1])
     }
 
-    fun start(lS: Stats, lM: Int?, lD: Int?){
+    fun update(){ start(stats, m, d) }
+
+    fun start(lS: Stats, lM: Int?, lD: Int?) {
         binding = ActivityStatBinding.inflate(layoutInflater)
         setContentView(binding.root);
 
@@ -42,60 +38,144 @@ class Stat: AppCompatActivity() {
         stats = lS
 
         var args = arrayOf(m, d, null)
-        var index = if(d != null){ 2 } else{ if(m != null){ 1 } else{ 0 } }
+        var index = if (d != null) {
+            2
+        } else {
+            if (m != null) {
+                1
+            } else {
+                0
+            }
+        }
 
         var size = stats.getSize(m, d)
         var maxSize = stats.getMaxSize(m, d)
-        var parentSize = if(d != null){ stats.getSize(m) } else{ stats.getSize() } - 1
+        var parentSize = if (d != null) {
+            stats.getSize(m)
+        } else {
+            stats.getSize()
+        } - 1
 
-        with(binding){
+        with(binding) {
             var i = 0
             var count = 31
             var maxValue = 1f
 
             args[index] = 0
-            while(i++ < size){
+            while (i++ < size) {
                 var value = stats!!.getCount(args[0]!!, args[1], args[2])
 
                 args[index] = args[index]!! + 1
-                if(value > maxValue){ maxValue = value.toFloat() }
+                if (value > maxValue) {
+                    maxValue = value.toFloat()
+                }
             }
 
             args[index] = size - 1
             var target = stats.getTarget(m, d)
-            maxValue = if(target > maxValue * 2){ maxValue * 1.25f } else{ if(target > maxValue){target} else{ maxValue } }
 
             var date = stats.getTime(args[0]!!, args[1], args[2])
             headline.text = date.substring(0, date.lastIndexOf(" "))
-            if(m == null){ left.visibility = View.GONE; right.visibility = View.GONE } else{
-                if((d == null && m == 0) || (d != null && d == 0)){ right.visibility = View.GONE } else{ right.setOnClickListener(Listener2(this@Stat, stats, arrayListOf<Int?>(m, d), index, -1)); right.text = "->"; if(right.visibility == View.GONE){ right.visibility = View.VISIBLE } }
-                if((d == null && m == parentSize) || (d != null && d == parentSize)){ left.visibility = View.GONE } else{ left.setOnClickListener(Listener2(this@Stat, stats, arrayListOf<Int?>(m, d), index, 1)); left.text = "<-"; if(left.visibility == View.GONE){ left.visibility = View.VISIBLE } }
+            if (m == null) {
+                left.visibility = View.GONE; right.visibility = View.GONE
+            } else {
+                if ((d == null && m == 0) || (d != null && d == 0)) {
+                    right.visibility = View.GONE
+                } else {
+                    right.setOnClickListener(
+                        Listener2(
+                            this@Stat,
+                            stats,
+                            arrayListOf<Int?>(m, d),
+                            index,
+                            -1
+                        )
+                    ); right.text = "->"; if (right.visibility == View.GONE) {
+                        right.visibility = View.VISIBLE
+                    }
+                }
+                if ((d == null && m == parentSize) || (d != null && d == parentSize)) {
+                    left.visibility = View.GONE
+                } else {
+                    left.setOnClickListener(
+                        Listener2(
+                            this@Stat,
+                            stats,
+                            arrayListOf<Int?>(m, d),
+                            index,
+                            1
+                        )
+                    ); left.text = "<-"; if (left.visibility == View.GONE) {
+                        left.visibility = View.VISIBLE
+                    }
+                }
             }
 
-            do{
+            var value = stats.getCount(m, d)
+            var percent = value / target
+            progressValue.text = round(percent * 100) + " %"
+            progressBar.layoutParams.width = (progressBar.layoutParams.width * percent).toInt()
+            averageAndMax.text = "Максимум кроків: " + maxValue.toInt().toString() + "\nСередня кількість: " + round(value / size.toFloat()) + "."
+
+            do {
                 var view = diagram.getChildAt(count)
+                var progressView = progressBars.getChildAt(31 - count)
                 var button = findViewById<Button>(buttons.getChildAt(31 - count).id)
 
-                if(args[index]!! > -1){
+                //Підлаштовуємо розмір вьюшки під розмір кнопки.
+                progressView.layoutParams.height = button.layoutParams.height
+
+                if (args[index]!! > -1) {
+                    // Збергаємо змінний параметр. В діаграммі значення виставляються обернено кнопкам (1 значення: остання вьюшка, перша кнопка і перша прогресс вьшка.)
                     var arg = args[index]!!
-                    var value = stats!!.getCount(args[0]!!, args[1], args[2])
 
-                    view.setOnClickListener(Listener(this@Stat, stats, args[0], args[1], args[2]))
+                    value = (diagram.layoutParams.height * (stats.getCount(args[0], args[1], args[2]) / maxValue)).toInt()
+                    if (value != 0) {
+                        view.layoutParams.height = value
+                        view.setOnClickListener(Listener(this@Stat, stats, args[0], args[1], args[2]))
+                        if (view.visibility == View.GONE || view.visibility == View.INVISIBLE) { view.visibility = View.VISIBLE }
 
+                    } else { view.visibility = View.INVISIBLE }
+
+                    //Отримуємо реверсивне змінне значення.
                     args[index] = size - arg - 1
-                    button.text = stats.getTime(args[0]!!, args[1], args[2]) + " — " + stats!!.getCount(args[0]!!, args[1], args[2]).toString()
-                    view.layoutParams.height = (diagram.layoutParams.height * (value / maxValue)).toInt() + 1
+                    button.text = stats.getTime(args[0], args[1], args[2]) + " — " + stats!!.getCount(args[0]!!, args[1], args[2]).toString()
+                    if(index != 2){ button.setOnClickListener(Listener2(this@Stat, stats, arrayListOf(args[0], args[1]))) }
 
-                    if(button.visibility == Button.GONE){ button.visibility = Button.VISIBLE }
-                    if(view.visibility == View.GONE || view.visibility == View.INVISIBLE) { view.visibility = View.VISIBLE }
+                    //Діленням значення на ціль отримуємо відсоток виконання цілі, після чого міняємо ширину відповідно відсотку. За максимум беремо MATCH_PARENT.
+                    value = (progressBars.layoutParams.width * (stats.getCount(args[0], args[1], args[2]) / stats.getTarget(args[0], args[1], args[2]))).toInt()
+                    if (value != 0) {
+                        progressView.layoutParams.width = value;
+                        if (progressView.visibility == View.GONE || progressView.visibility == View.INVISIBLE) { progressView.visibility = View.VISIBLE }
+
+                    } else { progressView.visibility = View.INVISIBLE }
+
+                    if (button.visibility == Button.GONE) {
+                        button.visibility = Button.VISIBLE
+                    }
+
+                    if (progressView.visibility == View.GONE) {
+                        progressView.visibility = View.VISIBLE
+                    }
 
                     args[index] = arg - 1
                 }
 
-                if(maxSize-- > 0){
-                    if(args[index] != -2){ view.setBackgroundColor(Color.parseColor(getRandomColor())); if(args[index] == -1){ args[index] = -2 } } else{ view.visibility = View.INVISIBLE; button.visibility = Button.GONE }
-                } else{ view.visibility = View.GONE; button.visibility = Button.GONE }
-            }while(--count != -1)
+                if (maxSize-- > 0) {
+                    if (args[index] != -2) {
+                        var color = getRandomColor()
+
+                        view.setBackgroundColor(Color.parseColor(color))
+                        progressView.setBackgroundColor(Color.parseColor(color))
+
+                        if (args[index] == -1) { args[index] = -2 }
+                    } else {
+                        view.visibility = View.INVISIBLE; button.visibility = Button.GONE; progressView.visibility = View.GONE
+                    }
+                } else {
+                    view.visibility = View.GONE; button.visibility = Button.GONE; progressView.visibility = View.GONE
+                }
+            } while (--count != -1)
         }
     }
 
@@ -109,6 +189,11 @@ class Stat: AppCompatActivity() {
 
         return color
     }
+
+    fun round(x: Float, y: Int = 2): String{
+        var y = stats.pow(10, y).toFloat()
+        return ((x * y).toInt() / y).toString()
+    }
 }
 
 class Listener(val stat: Stat, var stats: Stats, val arg1: Int? = null, val arg2: Int? = null, val arg3: Int? = null): View.OnClickListener{
@@ -117,10 +202,12 @@ class Listener(val stat: Stat, var stats: Stats, val arg1: Int? = null, val arg2
     }
 }
 
-class Listener2(var parent: Stat, var arg1: Stats, var arg2: ArrayList<Int?>, var index: Int, var add: Int): View.OnClickListener{
+class Listener2(var parent: Stat, var arg1: Stats, var arg2: ArrayList<Int?>, var index: Int? = null, var add: Int? = null): View.OnClickListener{
     override fun onClick(p0: View?) {
-        index -= 1
-        arg2[index] = arg2[index]!! + add
+        if(index != null){
+            index = index!! + 1
+            arg2[index!!] = arg2[index!!]!! + add!!
+        }
 
         parent.start(arg1, arg2[0], arg2[1])
     }

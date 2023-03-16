@@ -126,7 +126,7 @@ class Stats(var path: File) {
 
     fun add(c: Int){ stats[0].add(c); stepsCount = stepsCount!! + c; write() }
 
-    fun getCount(m: Int, d: Int? = null, h: Int? = null): Int{ return stats[m].getCount(d, h) }
+    fun getCount(m: Int?, d: Int? = null, h: Int? = null): Int{ if(m != null){ return stats[m].getCount(d, h) } else{ var c = 0; var times = stats.size - 1; do{ c += stats[times].getCount() } while(--times != -1); return c } }
     fun getSize(m: Int? = null, d: Int? = null): Int{ if(m != null){ return stats[m].getSize(d) } else{ return stats.size }}
 
     fun getMaxSize(m: Int? = null, d: Int? = null): Int{
@@ -136,22 +136,23 @@ class Stats(var path: File) {
 
         var date = Date().toString().split(" ")
 
-        var nextMonth = 28
+        var daysCount = 28
         var curMonth = date[1]
-        var t = time!! + (nextMonth - date[2].toInt()) * 3600 * 24 * 1000
+        var t = time!! + (daysCount - date[2].toInt() + 1) * 3600 * 24 * 1000
 
-        while(Date(t).toString().split(" ")[1] == curMonth){ nextMonth += 1; t += 3600 * 24 * 1000 }
+        while(Date(t).toString().split(" ")[1] == curMonth){ daysCount += 1; t += 3600 * 24 * 1000 }
 
-        return nextMonth
+        return daysCount
     }
 
-    fun getTarget(m: Int? = null, d: Int? = null): Float{
+    fun getTarget(m: Int? = null, d: Int? = null, h: Int? = null): Float{
+        if(h != null){ return target!! / 24f }
         if(d != null){ return target!!.toFloat() }
         if(m != null){ return (getMaxSize(m) * target!!).toFloat() }
 
         var size = 0
-        var times = stats.size
-        do{ size += getSize(times - 1) } while(--times != 0)
+        var times = stats.size - 1
+        do{ size += getMaxSize(times) } while(--times != -1)
 
         return (size * target!!).toFloat()
     }
