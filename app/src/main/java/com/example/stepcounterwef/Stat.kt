@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.stepcounterwef.databinding.ActivityStatBinding
 import java.util.*
@@ -82,7 +81,7 @@ class Stat: AppCompatActivity() {
             var target = stats.getTarget(m, d)
 
             var date = stats.getTime(args[0]!!, args[1], args[2])
-            headline.text = date.substring(0, date.lastIndexOf(" "))
+            headline.text = date[0][index]
             if (m == null) {
                 left.visibility = View.GONE; right.visibility = View.GONE
             } else {
@@ -152,7 +151,7 @@ class Stat: AppCompatActivity() {
 
                     //Отримуємо реверсивне змінне значення.
                     args[index] = size - arg - 1
-                    button.text = stats.getTime(args[0], args[1], args[2]) + " — " + stats.getCount(args[0]!!, args[1], args[2]).toString()
+                    button.text = stats.getTime(args[0], args[1], args[2])[1][index] + " — " + stats.getCount(args[0]!!, args[1], args[2]).toString()
                     if(index != 2){ button.setOnClickListener(Listener2(this@Stat, stats, arrayListOf(args[0], args[1]))) }
 
                     value = (screenWidth!! * (stats.getCount(args[0], args[1], args[2]) / stats.getTarget(args[0], args[1], args[2]))).toInt()
@@ -194,7 +193,7 @@ class Stat: AppCompatActivity() {
     fun getRandomColor(): String{
         var color = "#"
         var random = Random()
-        var s = "1234567890ABCDEF"
+        var s = "0123456789ABCDEF"
 
         var times = 6
         do{ color += s[random.nextInt(16)] } while(--times != 0)
@@ -215,7 +214,7 @@ class Stat: AppCompatActivity() {
 
 class Listener(val stat: Stat, var stats: Stats, val arg1: Int? = null, val arg2: Int? = null, val arg3: Int? = null): View.OnClickListener{
     override fun onClick(p0: View?) {
-        Toast.makeText(stat, stats.getTime(arg1!!, arg2, arg3), Toast.LENGTH_SHORT).show()
+        //Toast.makeText(stat, stats.getTime(arg1!!, arg2, arg3)[1], Toast.LENGTH_SHORT).show()
     }
 }
 

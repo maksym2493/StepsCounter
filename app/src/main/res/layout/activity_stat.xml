@@ -353,7 +353,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="20dp"
         android:fillViewport="true"
@@ -370,327 +370,357 @@
             <View
                 android:id="@+id/bar1"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button1" />
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar2"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button2"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button2" />
+                app:layout_constraintTop_toTopOf="@+id/button2"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar3"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button3"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button3" />
+                app:layout_constraintTop_toTopOf="@+id/button3"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar4"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button4"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button4" />
+                app:layout_constraintTop_toTopOf="@+id/button4"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar5"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button5"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button5" />
+                app:layout_constraintTop_toTopOf="@+id/button5"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar6"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button6"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button6" />
+                app:layout_constraintTop_toTopOf="@+id/button6"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar7"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button7"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button7" />
+                app:layout_constraintTop_toTopOf="@+id/button7"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar8"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button8"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button8" />
+                app:layout_constraintTop_toTopOf="@+id/button8"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar9"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button9"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button9" />
+                app:layout_constraintTop_toTopOf="@+id/button9"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar10"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button10"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button10" />
+                app:layout_constraintTop_toTopOf="@+id/button10"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar11"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button11"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button11" />
+                app:layout_constraintTop_toTopOf="@+id/button11"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar12"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button12"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button12" />
+                app:layout_constraintTop_toTopOf="@+id/button12"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar13"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button13"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button13" />
+                app:layout_constraintTop_toTopOf="@+id/button13"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar14"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button14"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button14" />
+                app:layout_constraintTop_toTopOf="@+id/button14"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar15"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button15"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button15" />
+                app:layout_constraintTop_toTopOf="@+id/button15"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar16"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button16"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button16" />
+                app:layout_constraintTop_toTopOf="@+id/button16"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar17"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button17"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button17" />
+                app:layout_constraintTop_toTopOf="@+id/button17"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar18"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button18"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button18" />
+                app:layout_constraintTop_toTopOf="@+id/button18"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar19"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button19"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button19" />
+                app:layout_constraintTop_toTopOf="@+id/button19"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar20"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button20"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button20" />
+                app:layout_constraintTop_toTopOf="@+id/button20"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar21"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button21"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button21" />
+                app:layout_constraintTop_toTopOf="@+id/button21"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar22"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button22"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button22" />
+                app:layout_constraintTop_toTopOf="@+id/button22"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar23"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button23"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button23" />
+                app:layout_constraintTop_toTopOf="@+id/button23"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar24"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button24"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button24" />
+                app:layout_constraintTop_toTopOf="@+id/button24"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar25"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button25"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button25" />
+                app:layout_constraintTop_toTopOf="@+id/button25"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar26"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button26"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button26" />
+                app:layout_constraintTop_toTopOf="@+id/button26"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar27"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button27"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button27" />
+                app:layout_constraintTop_toTopOf="@+id/button27"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar28"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button28"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button28" />
+                app:layout_constraintTop_toTopOf="@+id/button28"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar29"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button29"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button29" />
+                app:layout_constraintTop_toTopOf="@+id/button29"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar30"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button30"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button30" />
+                app:layout_constraintTop_toTopOf="@+id/button30"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar31"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button31"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button31" />
+                app:layout_constraintTop_toTopOf="@+id/button31"
+                app:layout_constraintVertical_bias="1" />
 
             <View
                 android:id="@+id/bar32"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="20dp"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="@+id/button32"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button32" />
+                app:layout_constraintTop_toTopOf="@+id/button32"
+                app:layout_constraintVertical_bias="1" />
 
             <TextView
                 android:id="@+id/button1"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:paddingTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button2"
@@ -702,8 +732,7 @@
                 android:id="@+id/button2"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button3"
@@ -716,8 +745,7 @@
                 android:id="@+id/button3"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button4"
@@ -730,8 +758,7 @@
                 android:id="@+id/button4"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button5"
@@ -744,8 +771,7 @@
                 android:id="@+id/button5"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button6"
@@ -758,8 +784,7 @@
                 android:id="@+id/button6"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button7"
@@ -772,8 +797,7 @@
                 android:id="@+id/button7"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button8"
@@ -786,8 +810,7 @@
                 android:id="@+id/button8"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button9"
@@ -800,8 +823,7 @@
                 android:id="@+id/button9"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button10"
@@ -814,8 +836,7 @@
                 android:id="@+id/button10"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button11"
@@ -828,8 +849,7 @@
                 android:id="@+id/button11"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button12"
@@ -842,8 +862,7 @@
                 android:id="@+id/button12"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button13"
@@ -856,8 +875,7 @@
                 android:id="@+id/button13"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button14"
@@ -870,8 +888,7 @@
                 android:id="@+id/button14"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button15"
@@ -884,8 +901,7 @@
                 android:id="@+id/button15"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button16"
@@ -898,8 +914,7 @@
                 android:id="@+id/button16"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button17"
@@ -912,8 +927,7 @@
                 android:id="@+id/button17"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button18"
@@ -926,8 +940,7 @@
                 android:id="@+id/button18"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button19"
@@ -940,8 +953,7 @@
                 android:id="@+id/button19"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button20"
@@ -954,8 +966,7 @@
                 android:id="@+id/button20"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button21"
@@ -968,8 +979,7 @@
                 android:id="@+id/button21"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button22"
@@ -982,8 +992,7 @@
                 android:id="@+id/button22"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button23"
@@ -996,8 +1005,7 @@
                 android:id="@+id/button23"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button24"
@@ -1010,8 +1018,7 @@
                 android:id="@+id/button24"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button25"
@@ -1024,8 +1031,7 @@
                 android:id="@+id/button25"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button26"
@@ -1038,8 +1044,7 @@
                 android:id="@+id/button26"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button27"
@@ -1052,8 +1057,7 @@
                 android:id="@+id/button27"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button28"
@@ -1066,8 +1070,7 @@
                 android:id="@+id/button28"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button29"
@@ -1080,8 +1083,7 @@
                 android:id="@+id/button29"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button30"
@@ -1094,8 +1096,7 @@
                 android:id="@+id/button30"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button31"
@@ -1108,8 +1109,7 @@
                 android:id="@+id/button31"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toTopOf="@+id/button32"
@@ -1122,8 +1122,7 @@
                 android:id="@+id/button32"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -1172,13 +1171,13 @@
     <View
         android:id="@+id/progressBar"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="20dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/averageAndMax" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/progressValue" />
 
     <TextView
         android:id="@+id/averageAndMax"
@@ -1194,10 +1193,10 @@
         android:id="@+id/progressValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/progressBar"
-        app:layout_constraintEnd_toEndOf="@+id/progressBar"
-        app:layout_constraintStart_toStartOf="@+id/progressBar"
-        app:layout_constraintTop_toTopOf="@+id/progressBar" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/averageAndMax" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
