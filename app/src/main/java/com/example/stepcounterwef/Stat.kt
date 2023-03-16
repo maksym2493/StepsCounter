@@ -192,7 +192,13 @@ class Stat: AppCompatActivity() {
 
     fun round(x: Float, y: Int = 2): String{
         var y = stats.pow(10, y).toFloat()
-        return ((x * y).toInt() / y).toString()
+        var x = x * y
+
+        var add = 0
+
+        (x - x.toInt()).toString().substring(2).forEach{ if(it != '4'){ return@forEach }; if(it == '5'){ add = 1; return@forEach } }
+
+        return ((x + add) / y).toString()
     }
 }
 
