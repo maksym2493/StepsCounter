@@ -26,25 +26,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     // variable gives the running status
     private var running = true
 
+    companion object{
+        lateinit var stat: Stat
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var dir = File(filesDir, "Data")
-        if(!dir.exists()){ dir.mkdir() }
-
-        level = Level(filesDir)
-        stats = Stats(filesDir)
-
-        Stat.data1 = stats
-        Stat.data2 = arrayListOf(null, null)
-        startActivity(Intent(this, Stat::class.java))
-        return
-
         counter = findViewById<TextView>(R.id.counter)
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) { ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), 100) } else{ start() }
-
-        start()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray){
@@ -59,11 +50,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         level = Level(filesDir)
         stats = Stats(filesDir)
 
+        Stat.data1 = stats
+        Stat.data2 = arrayListOf(null, null)
+
+        stats.cheackUpdate()
+        startActivity(Intent(this, Stat::class.java))
+        return
+
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensorManager?.registerListener(this, sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER), SensorManager.SENSOR_DELAY_UI)
 
-        counter.text = stats.getCount(0, 0).toString()
-        stats.write()
         Toast.makeText(this, "Step counter has been activated", Toast.LENGTH_SHORT).show()
     }
 
@@ -80,10 +76,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent?) {
         var stepsCount = stats.getStepsCount(event!!.values[0].toInt())
 
-        //stats.cheackUpdate()
+        stats.cheackUpdate()
         stats.add(stepsCount)
-        level.add(stepsCount)
-        if (running) { counter.text = stats.getCount(0, 0).toString() }
+        //level.add(stepsCount)
+        if (running) { if(stat.running()){ /*stat.update()*/ }; counter.text = stats.getCount(0, 0).toString() }
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {

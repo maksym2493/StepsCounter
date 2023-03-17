@@ -10,6 +10,7 @@ import com.example.stepcounterwef.databinding.ActivityStatBinding
 import java.util.*
 
 class Stat: AppCompatActivity() {
+    private var r = true
     private var e = false
     private var m: Int? = null
     private var d: Int? = null
@@ -24,15 +25,30 @@ class Stat: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        MainActivity.stat = this
         start(data1, data2[0], data2[1])
     }
 
+    override fun onResume() {
+        super.onResume()
+        r = true
+    }
+
+    override fun onPause() {
+        super.onPause()
+        r = false
+    }
+
     fun update(){ start(stats, m, d) }
+    fun running(): Boolean{ return r }
 
     fun changeE(){ e = !e }
     fun getE(): Boolean{ return e }
 
     fun start(lS: Stats, lM: Int?, lD: Int?) {
+        if(lM == null && lD == null && e == false){ e = true }
+
         binding = ActivityStatBinding.inflate(layoutInflater)
         setContentView(binding.root);
 
@@ -65,7 +81,7 @@ class Stat: AppCompatActivity() {
 
             var i = 0
             var count = 31
-            var maxValue = 1f
+            var maxValue = 0f
 
             args[index] = 0
             while (i++ < size) {
@@ -131,6 +147,8 @@ class Stat: AppCompatActivity() {
 
             diagramsBack.text = "Назад"
             diagramsBack.setOnClickListener(Listener2(this@Stat, stats, if(d != null){ arrayListOf(m, null) } else{ arrayListOf(null, null) }))
+
+            if(maxValue == 0f){ maxValue = 1f }
 
             do {
                 var view = diagram.getChildAt(count)

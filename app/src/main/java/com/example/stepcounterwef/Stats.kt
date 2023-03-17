@@ -23,6 +23,7 @@ data class Month(var s: String){
 
     fun add(c: Int){ days[0].add(c); count = count!! + c }
     fun newDay(){ days.add(0, Day("0 0")) }
+    fun newHour(){ days[0].newHour() }
 
     fun getSize(d: Int? = null): Int{ if(d != null){ return days[d].getSize() } else{ return days.size }}
     fun getCount(d: Int? = null, h: Int? = null): Int{ if(d != null){ return days[d].getCount(h)} else{ return count!! } }
@@ -47,6 +48,7 @@ data class Day(var s: String){
     }
 
     fun add(c: Int){ count = count!! + c; hours[0] += c }
+    fun newHour(){ hours.add(0, 0) }
 
     fun getSize(): Int{ return hours.size }
     fun getCount(h: Int? = null): Int{ if(h != null){ return hours[h] } else{ return count!! } }
@@ -55,7 +57,7 @@ data class Day(var s: String){
 //month  day2 hour24 hour23  day1 hour24 hour23\n
 //month2  day2 hour24 hour23  day1 hour24 hour23\n
 
-class Stats(var path: File) {
+class Stats(var path: File){
     private var time: Long? = null
     private var count: Int? = null
     private var target: Int? = null
@@ -67,12 +69,12 @@ class Stats(var path: File) {
     init{
         if(!f.exists()){
             target = 10000
-            time = get_start_time()
+            time = get_start_time() - 3600 * 24 * 32 * 10 * 1000
             count = ((Date().time - time!!) / 3600000).toInt()
 
             time = time!! + count!! * 3600000
 
-            stats.add(Month("6  100 100 2 3  16 2 3 4 6 1  37 6 5 2 4 8 1 9 2"))
+            stats.add(Month("0  0 0"))
         } else{
             var data = f.readText().split("\n")
             var text = data[0].split(" ")
@@ -94,16 +96,16 @@ class Stats(var path: File) {
             count = count!! + 1
             if(!update_stats){ update_stats = true }
 
-            if(count!! > 24){
+            if(count!! >= 24){
                 count = 0
                 if(!update_time){ update_time = true }
 
                 if(Date(time!!).toString().split(" ")[1] != Date(time!! + 3600000).toString().split(" ")[1]){
-                    if(stats.size > 12){ stats.remove(stats[11]) }
+                    if(stats.size == 12){ stats.removeAt(11) }
 
                     stats.add(0, Month("0  0 0"))
                 } else{ stats[0].newDay() }
-            }
+            } else{ stats[0].newHour() }
 
             time = time!! + 3600000
         }
