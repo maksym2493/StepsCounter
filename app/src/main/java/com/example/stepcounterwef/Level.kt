@@ -7,7 +7,7 @@ class Level(var path: File){
     private var exp: Int? = null
     private var totalExp: Int? = null
 
-    private var f = File(path, "level.txt")
+    private var f = File(path, "data/level.txt")
 
     init{
         if(!f.exists()){ f.writeText("1 0 100") }

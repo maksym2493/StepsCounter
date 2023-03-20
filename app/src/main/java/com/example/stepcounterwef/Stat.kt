@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.stepcounterwef.databinding.ActivityStatBinding
 import java.util.*
 
@@ -152,13 +153,12 @@ class Stat: AppCompatActivity() {
 
             do {
                 var view = diagram.getChildAt(count)
-                var progressView = buttons.getChildAt(31 - count)
-                var button = findViewById<TextView>(buttons.getChildAt(63 - count).id)
+                var constraintLayout = findViewById<ConstraintLayout>(buttons.getChildAt(count).id)
+
+                var progressView = constraintLayout.getChildAt(1)
+                var button = findViewById<TextView>(constraintLayout.getChildAt(0).id)
 
                 if (args[index]!! > -1) {
-                    // Збергаємо змінний параметр. В діаграммі значення виставляються обернено кнопкам (1 значення: остання вьюшка, перша кнопка і перша прогресс вьшка.)
-                    var arg = args[index]!!
-
                     value = (diagram.layoutParams.height * (stats.getCount(args[0], args[1], args[2]) / maxValue)).toInt()
                     if (value != 0) {
                         view.layoutParams.height = value
@@ -167,11 +167,6 @@ class Stat: AppCompatActivity() {
 
                     } else { view.visibility = View.INVISIBLE }
 
-                    //Отримуємо реверсивне змінне значення.
-                    args[index] = size - arg - 1
-                    button.text = stats.getTime(args[0], args[1], args[2])[1][index] + " — " + stats.getCount(args[0]!!, args[1], args[2]).toString()
-                    if(index != 2){ button.setOnClickListener(Listener2(this@Stat, stats, arrayListOf(args[0], args[1]))) }
-
                     value = (screenWidth!! * (stats.getCount(args[0], args[1], args[2]) / stats.getTarget(args[0], args[1], args[2]))).toInt()
                     if (value != 0) {
                         progressView.layoutParams.width = value
@@ -179,15 +174,12 @@ class Stat: AppCompatActivity() {
 
                     } else { progressView.visibility = View.INVISIBLE }
 
-                    if (button.visibility == Button.GONE) {
-                        button.visibility = Button.VISIBLE
-                    }
+                    button.text = stats.getTime(args[0], args[1], args[2])[1][index] + " — " + stats.getCount(args[0]!!, args[1], args[2]).toString()
+                    if(index != 2){ constraintLayout.setOnClickListener(Listener2(this@Stat, stats, arrayListOf(args[0], args[1]))) }
 
-                    if (progressView.visibility == View.GONE) {
-                        progressView.visibility = View.VISIBLE
-                    }
+                    if(constraintLayout.visibility == Button.GONE) {constraintLayout.visibility = ConstraintLayout.VISIBLE }
 
-                    args[index] = arg - 1
+                    args[index] = args[index]!! - 1
                 }
 
                 if (maxSize-- > 0) {
@@ -199,10 +191,10 @@ class Stat: AppCompatActivity() {
 
                         if (args[index] == -1) { args[index] = -2 }
                     } else {
-                        view.visibility = View.INVISIBLE; button.visibility = Button.GONE; progressView.visibility = View.GONE
+                        view.visibility = View.INVISIBLE; constraintLayout.visibility = View.GONE
                     }
                 } else {
-                    view.visibility = View.GONE; button.visibility = Button.GONE; progressView.visibility = View.GONE
+                    view.visibility = View.GONE; constraintLayout.visibility = View.GONE
                 }
             } while (--count != -1)
         }

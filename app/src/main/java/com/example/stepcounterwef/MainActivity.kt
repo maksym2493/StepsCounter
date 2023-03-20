@@ -34,7 +34,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        counter = findViewById<TextView>(R.id.counter)
+        start()
+        return
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) { ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), 100) } else{ start() }
     }
 
@@ -44,16 +45,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     fun start(){
-        var dir = File(filesDir, "Data")
+        var dir = File(filesDir, "data")
         if(!dir.exists()){ dir.mkdir() }
 
         level = Level(filesDir)
-        stats = Stats(filesDir)
+        stats = Stats(filesDir, this)
+        stats.cheackUpdate()
 
         Stat.data1 = stats
         Stat.data2 = arrayListOf(null, null)
 
-        stats.cheackUpdate()
         startActivity(Intent(this, Stat::class.java))
         return
 
@@ -76,10 +77,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent?) {
         var stepsCount = stats.getStepsCount(event!!.values[0].toInt())
 
-        stats.cheackUpdate()
+        //stats.cheackUpdate()
         stats.add(stepsCount)
         //level.add(stepsCount)
-        if (running) { if(stat.running()){ /*stat.update()*/ }; counter.text = stats.getCount(0, 0).toString() }
+        if (running) { if(stat.running()){ stat.update() }; counter.text = stats.getCount(0, 0).toString() }
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {

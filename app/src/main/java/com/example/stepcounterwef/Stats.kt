@@ -57,24 +57,25 @@ data class Day(var s: String){
 //month  day2 hour24 hour23  day1 hour24 hour23\n
 //month2  day2 hour24 hour23  day1 hour24 hour23\n
 
-class Stats(var path: File){
+class Stats(var path: File, parent: MainActivity){
     private var time: Long? = null
-    private var count: Int? = null
+    var count: Int? = null
     private var target: Int? = null
     private var stats: ArrayList<Month> = ArrayList<Month>()
 
     private var stepsCount: Int? = null
-    private var f = File(path, "stats.txt")
+    private var f = File(path, "data/stats.txt")
 
     init{
         if(!f.exists()){
             target = 10000
-            time = get_start_time() - 3600 * 24 * 32 * 10 * 1000
+            time = getStartTime()
             count = ((Date().time - time!!) / 3600000).toInt()
 
             time = time!! + count!! * 3600000
 
             stats.add(Month("0  0 0"))
+            write()
         } else{
             var data = f.readText().split("\n")
             var text = data[0].split(" ")
@@ -92,11 +93,11 @@ class Stats(var path: File){
         var update_stats = false
         var curTime = Date().time
 
-        while(curTime - time!! > 3600000){
+        while((curTime - time!!) >= 3600000){
             count = count!! + 1
             if(!update_stats){ update_stats = true }
 
-            if(count!! >= 24){
+            if(count!! == 24){
                 count = 0
                 if(!update_time){ update_time = true }
 
@@ -111,7 +112,7 @@ class Stats(var path: File){
         }
 
         if(update_time){
-            var new_time = get_start_time()
+            var new_time = getStartTime()
             if(new_time + count!! * 3600000 != time){
                 time = curTime - curTime % 3600000
                 count = ((new_time - time!!) / 3600000).toInt()
@@ -183,7 +184,7 @@ class Stats(var path: File){
         return res
     }
 
-    fun get_start_time(): Long{
+    fun getStartTime(): Long{
         var i = 2
         var date = Date().time
 
