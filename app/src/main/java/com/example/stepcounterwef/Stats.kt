@@ -89,7 +89,6 @@ class Stats(var path: File, parent: MainActivity){
     }
 
     fun cheackUpdate(){
-        var update_time = false
         var update_stats = false
         var curTime = Date().time
 
@@ -99,7 +98,6 @@ class Stats(var path: File, parent: MainActivity){
 
             if(count!! == 24){
                 count = 0
-                if(!update_time){ update_time = true }
 
                 if(Date(time!!).toString().split(" ")[1] != Date(time!! + 3600000).toString().split(" ")[1]){
                     if(stats.size == 12){ stats.removeAt(11) }
@@ -109,14 +107,6 @@ class Stats(var path: File, parent: MainActivity){
             } else{ stats[0].newHour() }
 
             time = time!! + 3600000
-        }
-
-        if(update_time){
-            var new_time = getStartTime()
-            if(new_time + count!! * 3600000 != time){
-                time = curTime - curTime % 3600000
-                count = ((new_time - time!!) / 3600000).toInt()
-            }
         }
 
         if(update_stats){ write() }
