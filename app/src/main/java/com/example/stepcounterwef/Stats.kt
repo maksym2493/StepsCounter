@@ -151,12 +151,13 @@ class Stats(var path: File, parent: MainActivity){
 
     fun getTime(m: Int? = null, d: Int? = null, h: Int? = null): Array<Array<String>>{
         var m = m
+        var d = d
         var t = time!!
 
-        if((m != null && m != 0) || (m != null && m == 0 && d != 0)){ t -= (count!! + if(h != null){ 1 } else{ 0 }) * 3600 * 1000 }
+        if((m != null && m != 0) || (m != null && m == 0 && d != 0)){ t -= (count!! + if(h != null){ 1 } else{ 1 }) * 3600 * 1000 }
 
-        if(h != null){ t -= h * 3600 * 1000 }
-        if(d != null){ t -= d * 3600 * 24 * 1000L }
+        if(h != null){ t -= h * 3600 * 1000; d = d!! - 1 }
+        if(d != null && d > 0){ t -= d * 3600 * 24 * 1000L }
         if(m != null){ while(m != 0){ t -= stats[m - 1].getSize() * 3600 * 24 * 1000L; m -= 1 } }
 
         var date = Date(t).toString().substring(0, 13).split(" ")
