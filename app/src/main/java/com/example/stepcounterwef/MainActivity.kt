@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         level = Level(filesDir)
         stats = Stats(filesDir, this)
-        stats.cheackUpdate()
+        stats.cheackUpdate(this)
 
         Stat.data1 = stats
         Stat.data2 = arrayListOf(null, null)

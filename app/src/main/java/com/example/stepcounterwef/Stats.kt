@@ -88,25 +88,24 @@ class Stats(var path: File, parent: MainActivity){
         }
     }
 
-    fun cheackUpdate(){
+    fun cheackUpdate(parent: MainActivity){
         var update_stats = false
         var curTime = Date().time
 
-        while((curTime - time!!) >= 3600000){
+        while((curTime - time!!) >= 3600000L){
             count = count!! + 1
+            time = time!! + 3600000L
             if(!update_stats){ update_stats = true }
 
             if(count!! == 24){
                 count = 0
 
-                if(Date(time!!).toString().split(" ")[1] != Date(time!! + 3600000).toString().split(" ")[1]){
+                if(Date(time!!).toString().split(" ")[2] == "01"){
                     if(stats.size == 12){ stats.removeAt(11) }
 
                     stats.add(0, Month("0  0 0"))
                 } else{ stats[0].newDay() }
             } else{ stats[0].newHour() }
-
-            time = time!! + 3600000
         }
 
         if(update_stats){ write() }
@@ -152,8 +151,13 @@ class Stats(var path: File, parent: MainActivity){
 
     fun getTime(m: Int? = null, d: Int? = null, h: Int? = null): Array<Array<String>>{
         var m = m
-        var t = time!! - if(d != null){ (3600 * 24 * d) * 1000 } else{ 0 } - if(h != null){ (3600 * h) * 1000 } else{ 0 }
-        if(m != null){ while(m != 0){ t -= stats[m].getSize() * (3600 * 24) * 1000; m -= 1 } }
+        var t = time!!
+
+        if((m != null && m != 0) || (m != null && m == 0 && d != 0)){ t -= (count!! + if(h != null){ 1 } else{ 0 }) * 3600 * 1000 }
+
+        if(h != null){ t -= h * 3600 * 1000 }
+        if(d != null){ t -= d * 3600 * 24 * 1000L }
+        if(m != null){ while(m != 0){ t -= stats[m - 1].getSize() * 3600 * 24 * 1000L; m -= 1 } }
 
         var date = Date(t).toString().substring(0, 13).split(" ")
         return arrayOf(arrayOf("Monthes", date[1], date[1] + " " + date[2] + "-е"), arrayOf(date[1], date[2] + "-е", date[3] + ":00"))
