@@ -156,7 +156,7 @@ class Stats(var path: File, parent: MainActivity){
 
         if((m != null && m != 0) || (m != null && m == 0 && d != 0)){ t -= (count!! + if(h != null){ 1 } else{ 1 }) * 3600 * 1000 }
 
-        if(h != null){ t -= h * 3600 * 1000; d = d!! - 1 }
+        if(h != null){ t -= h * 3600 * 1000; if(m == 0){ d = d!! - 1 } }
         if(d != null && d > 0){ t -= d * 3600 * 24 * 1000L }
         if(m != null){ while(m != 0){ t -= stats[m - 1].getSize() * 3600 * 24 * 1000L; m -= 1 } }
 
