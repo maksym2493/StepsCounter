@@ -99,7 +99,7 @@ class Stats(var path: File){
     }
 
     init{
-        if(!f.exists()){
+        if(f.exists()){
             target = 10000
             time = getStartTime()
             count = ((Date().time - time!!) / 3600000).toInt()
