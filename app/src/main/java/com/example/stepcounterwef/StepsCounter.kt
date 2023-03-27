@@ -7,9 +7,11 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import android.os.IBinder
 import android.widget.Toast
 import java.io.File
+import java.util.*
 
 class StepsCounter: Service(){
     private var f = File(context.filesDir, "data/service.txt")
@@ -40,20 +42,22 @@ class StepsCounter: Service(){
         override fun onSensorChanged(event: SensorEvent) {
             if (event?.sensor?.type == Sensor.TYPE_STEP_COUNTER) {
                 stepsCountCur = event.values[0].toInt()
-                if(stepsCountPrev == 0){ stepsCountPrev = stepsCountCur } else{
+                if(stepsCountPrev == 0){ stepsCountPrev = stepsCountCur; write() } else{
                     if(stepsCountCur < stepsCountPrev){ stepsCountPrev = 0 }
 
                     var delta = stepsCountCur - stepsCountPrev
 
-                    lvl.add(delta)
-                    stats.add(delta)
-                    stats.cheackUpdate()
-                    stepsCountPrev = stepsCountCur
+                    if(delta != 0){
+                        lvl.add(delta)
+                        stats.add(delta)
+                        stats.cheackUpdate()
+                        stepsCountPrev = stepsCountCur
 
-                    if(MainActivity.r){ context.start()} else{ if(Stat.r){ MainActivity.stat!!.update() } }
+                        write()
+                        File(externalCacheDir, "log.txt").writeText(Date().toString())
+                        if(MainActivity.r){ context.start()} else{ if(Stat.r){ MainActivity.stat!!.update() } }
+                    }
                 }
-
-                write()
             }
         }
 
@@ -73,8 +77,8 @@ class StepsCounter: Service(){
         super.onDestroy()
         sensorManager.unregisterListener(stepSensorListener, stepCounterSensor)
 
-        startService(Intent(context, this::class.java))
         Toast.makeText(context, "Service was destroyed!", Toast.LENGTH_SHORT).show()
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){ startForegroundService(Intent(this, StepsCounter::class.java)) }
     }
 
     override fun onBind(p0: Intent?): IBinder? {

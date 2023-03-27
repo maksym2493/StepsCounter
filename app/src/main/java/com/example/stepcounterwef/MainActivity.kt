@@ -3,6 +3,7 @@ package com.example.stepcounterwef
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -24,6 +25,14 @@ class MainActivity: AppCompatActivity() {
         var r = false
         var stat: Stat? = null
         private var windowSize: Int? = null
+
+        fun rewriteDigit(digit: Int): String{
+            var res = ""
+            var count = 0
+            digit.toString().reversed().forEach{ if(count == 3){ res = " " + res; count = 0 } else{ count += 1 }; res = it + res }
+
+            return res
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +51,7 @@ class MainActivity: AppCompatActivity() {
             StepsCounter.lvl = lvl
             StepsCounter.stats = stats
             StepsCounter.context = this
-            startService(Intent(this, StepsCounter::class.java))
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){ startForegroundService(Intent(this, StepsCounter::class.java)) }
 
             start()
         }
@@ -54,7 +63,7 @@ class MainActivity: AppCompatActivity() {
             StepsCounter.lvl = lvl
             StepsCounter.stats = stats
             StepsCounter.context = this
-            startService(Intent(this, StepsCounter::class.java))
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){ startForegroundService(Intent(this, StepsCounter::class.java)) }
 
             start()
         } else{ finish(); exit(0) }
@@ -197,14 +206,6 @@ class MainActivity: AppCompatActivity() {
                 } else{ listOfViews[i].visibility = View.INVISIBLE }
             } while(--i != -1)
         }
-    }
-
-    fun rewriteDigit(digit: Int): String{
-        var res = ""
-        var count = 0
-        digit.toString().reversed().forEach{ if(count == 3){ res = " " + res; count = 0 } else{ count += 1 }; res = it + res }
-
-        return res
     }
 
     override fun onBackPressed() {
