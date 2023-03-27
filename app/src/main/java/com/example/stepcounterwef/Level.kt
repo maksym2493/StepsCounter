@@ -23,7 +23,7 @@ class Level(var path: File){
 
     fun add(count: Int){
         exp = exp!! + count
-        if(exp!! >= totalExp!!){ lvl = lvl!! + 1; exp = exp!! - totalExp!!}
+        if(exp!! >= totalExp!!){ lvl = lvl!! + 1; exp = exp!! - totalExp!!; totalExp = totalExp!! + 100 }
 
         write()
     }

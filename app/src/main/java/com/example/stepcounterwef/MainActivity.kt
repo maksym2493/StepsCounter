@@ -8,6 +8,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.stepcounterwef.databinding.ActivityMainBinding
 import java.io.File
 import java.lang.System.exit
@@ -18,31 +20,44 @@ class MainActivity: AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    // variable gives the running status
-    private var running = true
-
     companion object{
-        lateinit var stat: Stat
+        var r = false
+        var stat: Stat? = null
         private var windowSize: Int? = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        r = true
         var dir = File(filesDir, "data")
-        if(!dir.exists()){ dir.mkdir() }
+        if (!dir.exists()) {
+            dir.mkdir()
+        }
 
         lvl = Level(filesDir)
         stats = Stats(filesDir)
 
-        start()
-        //return
-        //if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) { ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), 100) } else{ start() }
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) { ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACTIVITY_RECOGNITION), 100) } else{
+            StepsCounter.lvl = lvl
+            StepsCounter.stats = stats
+            StepsCounter.context = this
+            startService(Intent(this, StepsCounter::class.java))
+
+            start()
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray){
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) { start() } else{ finish(); exit(0) }
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            StepsCounter.lvl = lvl
+            StepsCounter.stats = stats
+            StepsCounter.context = this
+            startService(Intent(this, StepsCounter::class.java))
+
+            start()
+        } else{ finish(); exit(0) }
     }
 
     fun start(){
@@ -56,7 +71,7 @@ class MainActivity: AppCompatActivity() {
             var progress = expLevel[0] / expLevel[1].toFloat()
 
             level.text = "Рівень: " +  rewriteDigit(lvl.get_lvl())
-            exp.text = rewriteDigit(expLevel[0]) + " з " + rewriteDigit(expLevel[1]) + " [ " + Stats.round(progress) + " % ]"
+            exp.text = rewriteDigit(expLevel[0]) + " з " + rewriteDigit(expLevel[1]) + " [ " + Stats.round(progress * 100) + " % ]"
 
             var width = (progress * windowSize!!).toInt()
             if(width != 0){ levelProgress.layoutParams.width = width; levelProgress.setBackgroundColor(Color.parseColor(Stat.getRandomColor())) } else{ levelProgress.visibility = View.INVISIBLE }
@@ -110,6 +125,17 @@ class MainActivity: AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        r = true
+        start()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        r = false
     }
 
     fun drawDiagram(){
@@ -167,7 +193,7 @@ class MainActivity: AppCompatActivity() {
                 if(width != 0){
                     if(width < windowSize!!){ listOfViews[i].layoutParams.width = width } else{ listOfViews[i].layoutParams.width = windowSize!! }
                     listOfViews[i].setBackgroundColor(Color.parseColor(Stat.getRandomColor()))
-                } else{ levelProgress.visibility = View.INVISIBLE }
+                } else{ listOfViews[i].visibility = View.INVISIBLE }
             } while(--i != -1)
         }
     }
@@ -178,5 +204,16 @@ class MainActivity: AppCompatActivity() {
         digit.toString().reversed().forEach{ if(count == 3){ res = " " + res; count = 0 } else{ count += 1 }; res = it + res }
 
         return res
+    }
+
+    override fun onBackPressed() {
+        with(binding){
+            if(main.visibility == ConstraintLayout.GONE){
+                main.visibility = ConstraintLayout.VISIBLE
+                changeTargetLayout.visibility = ConstraintLayout.GONE
+
+                Toast.makeText(this@MainActivity, "Зміна скасована.", Toast.LENGTH_SHORT).show()
+            } else{ super.onBackPressed() }
+        }
     }
 }

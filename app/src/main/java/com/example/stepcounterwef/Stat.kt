@@ -11,7 +11,6 @@ import com.example.stepcounterwef.databinding.ActivityStatBinding
 import java.util.*
 
 class Stat: AppCompatActivity() {
-    private var r = true
     private var e = false
     private var m: Int? = null
     private var d: Int? = null
@@ -20,6 +19,7 @@ class Stat: AppCompatActivity() {
     private lateinit var binding: ActivityStatBinding
 
     companion object{
+        var r = false
         lateinit var data1: Stats
         var data2 = ArrayList<Int?>()
 
@@ -38,13 +38,16 @@ class Stat: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        r = true
         MainActivity.stat = this
         start(data1, data2[0], data2[1])
     }
 
     override fun onResume() {
         super.onResume()
+
         r = true
+        update()
     }
 
     override fun onPause() {
@@ -53,7 +56,6 @@ class Stat: AppCompatActivity() {
     }
 
     fun update(){ start(stats, m, d) }
-    fun running(): Boolean{ return r }
 
     fun changeE(){ e = !e }
     fun getE(): Boolean{ return e }
