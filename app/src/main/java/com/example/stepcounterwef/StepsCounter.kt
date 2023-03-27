@@ -47,6 +47,7 @@ class StepsCounter: Service(){
 
                     lvl.add(delta)
                     stats.add(delta)
+                    stats.cheackUpdate()
                     stepsCountPrev = stepsCountCur
 
                     if(MainActivity.r){ context.start()} else{ if(Stat.r){ MainActivity.stat!!.update() } }
@@ -72,6 +73,7 @@ class StepsCounter: Service(){
         super.onDestroy()
         sensorManager.unregisterListener(stepSensorListener, stepCounterSensor)
 
+        startService(Intent(context, this::class.java))
         Toast.makeText(context, "Service was destroyed!", Toast.LENGTH_SHORT).show()
     }
 

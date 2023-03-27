@@ -61,6 +61,7 @@ class MainActivity: AppCompatActivity() {
     }
 
     fun start(){
+        stats.cheackUpdate()
         binding = ActivityMainBinding.inflate(layoutInflater)
         windowSize = (windowManager.defaultDisplay.width - 20 * binding.diagram.layoutParams.height / 200f).toInt()
 

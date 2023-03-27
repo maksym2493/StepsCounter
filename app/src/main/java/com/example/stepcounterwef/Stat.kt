@@ -70,6 +70,7 @@ class Stat: AppCompatActivity() {
         d = lD
 
         stats = lS
+        stats.cheackUpdate()
 
         var args = arrayOf(m, d, null)
         var index = if (d != null) {
@@ -211,6 +212,11 @@ class Stat: AppCompatActivity() {
                 }
             } while (--count != -1)
         }
+    }
+
+    override fun onBackPressed(){
+       if(d != null){ d = null } else{ if(m != null){ m = null } else{ super.onBackPressed(); return } }
+       update()
     }
 }
 
