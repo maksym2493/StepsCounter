@@ -27,6 +27,12 @@ data class Month(var s: String){
 
     fun getSize(d: Int? = null): Int{ if(d != null){ return days[d].getSize() } else{ return days.size }}
     fun getCount(d: Int? = null, h: Int? = null): Int{ if(d != null){ return days[d].getCount(h)} else{ return count!! } }
+
+    fun get_last_counts(counts: ArrayList<Int>): ArrayList<Int>{
+        days.forEach{ it.get_last_counts(counts); if(counts.size == 24){ return@forEach } }
+
+        return counts
+    }
 }
 
 data class Day(var s: String){
@@ -52,12 +58,18 @@ data class Day(var s: String){
 
     fun getSize(): Int{ return hours.size }
     fun getCount(h: Int? = null): Int{ if(h != null){ return hours[h] } else{ return count!! } }
+
+    fun get_last_counts(counts: ArrayList<Int>): ArrayList<Int>{
+        hours.forEach{ counts.add(it); if(counts.size == 24){ return@forEach } }
+
+        return counts
+    }
 }
 
 //month  day2 hour24 hour23  day1 hour24 hour23\n
 //month2  day2 hour24 hour23  day1 hour24 hour23\n
 
-class Stats(var path: File, parent: MainActivity){
+class Stats(var path: File){
     private var time: Long? = null
     var count: Int? = null
     private var target: Int? = null
@@ -65,6 +77,26 @@ class Stats(var path: File, parent: MainActivity){
 
     private var stepsCount: Int? = null
     private var f = File(path, "data/stats.txt")
+
+    companion object{
+        fun pow(integer: Int, count: Int): Int{
+            var res = 1
+            var count = count
+            while (count != 0){ res *= integer; count -= 1 }
+
+            return res
+        }
+
+        fun round(x: Float, y: Int = 2): String{
+            var y = pow(10, y).toFloat()
+            var x = x * y
+
+            var add = 0
+            (x - x.toInt()).toString().substring(2).forEach{ if(it != '4'){ return@forEach }; if(it == '5'){ add = 1; return@forEach } }
+
+            return ((x.toInt() + add) / y).toString()
+        }
+    }
 
     init{
         if(!f.exists()){
@@ -74,7 +106,7 @@ class Stats(var path: File, parent: MainActivity){
 
             time = time!! + count!! * 3600000
 
-            stats.add(Month("0  0 0"))
+            stats.add(Month("30  25 3 1 9 2 10  5 5"))
             write()
         } else{
             var data = f.readText().split("\n")
@@ -88,7 +120,7 @@ class Stats(var path: File, parent: MainActivity){
         }
     }
 
-    fun cheackUpdate(parent: MainActivity){
+    fun cheackUpdate(){
         var update_stats = false
         var curTime = Date().time
 
@@ -111,14 +143,9 @@ class Stats(var path: File, parent: MainActivity){
         if(update_stats){ write() }
     }
 
-    fun getStepsCount(c: Int): Int{
-        if(stepsCount == null){ stepsCount = c; return 0}
-        return stepsCount!! - c
-    }
+    fun add(c: Int){ stats[0].add(c); write() }
 
-    fun add(c: Int){ stats[0].add(c); stepsCount = stepsCount!! + c; write() }
-
-    fun getCount(m: Int?, d: Int? = null, h: Int? = null): Int{ if(m != null){ return stats[m].getCount(d, h) } else{ var c = 0; var times = stats.size - 1; do{ c += stats[times].getCount() } while(--times != -1); return c } }
+    fun getCount(m: Int? = null, d: Int? = null, h: Int? = null): Int{ if(m != null){ return stats[m].getCount(d, h) } else{ var c = 0; var times = stats.size - 1; do{ c += stats[times].getCount() } while(--times != -1); return c } }
     fun getSize(m: Int? = null, d: Int? = null): Int{ if(m != null){ return stats[m].getSize(d) } else{ return stats.size }}
 
     fun getMaxSize(m: Int? = null, d: Int? = null): Int{
@@ -171,14 +198,6 @@ class Stats(var path: File, parent: MainActivity){
         f.writeText(text.substring(0, text.length - 1))
     }
 
-    fun pow(integer: Int, count: Int): Int{
-        var res = 1
-        var count = count
-        while (count != 0){ res *= integer; count -= 1 }
-
-        return res
-    }
-
     fun getStartTime(): Long{
         var i = 2
         var date = Date().time
@@ -187,4 +206,13 @@ class Stats(var path: File, parent: MainActivity){
 
         return date
     }
+
+    fun get_last_counts(): ArrayList<Int>{
+        var counts = ArrayList<Int>()
+        stats.forEach{ it.get_last_counts(counts); if(counts.size == 24){ return@forEach } }
+
+        return counts
+    }
+
+    fun setTarget(t: Int){ target = t; write() }
 }

@@ -22,6 +22,17 @@ class Stat: AppCompatActivity() {
     companion object{
         lateinit var data1: Stats
         var data2 = ArrayList<Int?>()
+
+        fun getRandomColor(): String{
+            var color = "#"
+            var random = Random()
+            var s = "0123456789ABCDEF"
+
+            var times = 6
+            do{ color += s[random.nextInt(16)] } while(--times != 0)
+
+            return color
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +62,7 @@ class Stat: AppCompatActivity() {
         if(lM == null && lD == null && e == false){ e = true }
 
         binding = ActivityStatBinding.inflate(layoutInflater)
-        setContentView(binding.root);
+        setContentView(binding.root)
 
         m = lM
         d = lD
@@ -143,8 +154,8 @@ class Stat: AppCompatActivity() {
                 progressBar.layoutParams.width = if(percent < 1){ width.toInt() } else{ screenWidth!! }
             } else{ progressBar.visibility = View.INVISIBLE }
 
-            progressValue.text = "Прогрес: " + round(percent * 100) + " %"
-            averageAndMax.text = "Максимум кроків: " + maxValue.toInt().toString() + ".\nСередня кількість: " + round(value / size.toFloat()) + "."
+            progressValue.text = "Прогрес: " + Stats.round(percent * 100) + " %"
+            averageAndMax.text = "Максимум кроків: " + maxValue.toInt().toString() + ".\nСередня кількість: " + Stats.round(value / size.toFloat()) + "."
 
             diagramsBack.text = "Назад"
             diagramsBack.setOnClickListener(Listener2(this@Stat, stats, if(d != null){ arrayListOf(m, null) } else{ arrayListOf(null, null) }))
@@ -175,7 +186,7 @@ class Stat: AppCompatActivity() {
                     } else { progressView.visibility = View.INVISIBLE }
 
                     button.text = stats.getTime(args[0], args[1], args[2])[1][index] + " — " + stats.getCount(args[0]!!, args[1], args[2]).toString()
-                    if(index != 2){ constraintLayout.setOnClickListener(Listener2(this@Stat, stats, arrayListOf(args[0], args[1]))) }
+                    if(index != 2){ constraintLayout.setOnClickListener(Listener2(this@Stat, stats, arrayListOf(args[0], args[1]))) } else{ constraintLayout.setOnClickListener{} }
 
                     if(constraintLayout.visibility == Button.GONE) {constraintLayout.visibility = ConstraintLayout.VISIBLE }
 
@@ -198,27 +209,6 @@ class Stat: AppCompatActivity() {
                 }
             } while (--count != -1)
         }
-    }
-
-    fun getRandomColor(): String{
-        var color = "#"
-        var random = Random()
-        var s = "0123456789ABCDEF"
-
-        var times = 6
-        do{ color += s[random.nextInt(16)] } while(--times != 0)
-
-        return color
-    }
-
-    fun round(x: Float, y: Int = 2): String{
-        var y = stats.pow(10, y).toFloat()
-        var x = x * y
-
-        var add = 0
-        (x - x.toInt()).toString().substring(2).forEach{ if(it != '4'){ return@forEach }; if(it == '5'){ add = 1; return@forEach } }
-
-        return ((x.toInt() + add) / y).toString()
     }
 }
 

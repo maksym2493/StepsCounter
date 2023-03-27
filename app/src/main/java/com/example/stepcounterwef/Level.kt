@@ -27,4 +27,8 @@ class Level(var path: File){
 
         write()
     }
+
+    fun get_lvl(): Int{ return lvl!! }
+    fun get_exp(): Array<Int>{ return arrayOf(exp!!, totalExp!!) }
+
 }
