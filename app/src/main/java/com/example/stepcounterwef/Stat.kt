@@ -7,70 +7,58 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.stepcounterwef.Tools.Companion.getRandomColor
+import com.example.stepcounterwef.Tools.Companion.round
 import com.example.stepcounterwef.databinding.ActivityStatBinding
-import java.util.*
 
 class Stat: AppCompatActivity() {
-    private var e = false
     private var m: Int? = null
     private var d: Int? = null
 
-    private lateinit var stats: Stats
+    private var active = true
     private lateinit var binding: ActivityStatBinding
-
-    companion object{
-        var r = false
-        lateinit var data1: Stats
-        var data2 = ArrayList<Int?>()
-
-        fun getRandomColor(): String{
-            var color = "#"
-            var random = Random()
-            var s = "0123456789ABCDEF"
-
-            var times = 6
-            do{ color += s[random.nextInt(16)] } while(--times != 0)
-
-            return color
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        r = true
-        MainActivity.stat = this
-        start(data1, data2[0], data2[1])
+        Data.stat = this
+        start()
     }
 
     override fun onResume() {
-        super.onResume()
+        active = true
+        start()
 
-        r = true
-        update()
+        super.onResume()
     }
 
     override fun onPause() {
+        active = false
+
         super.onPause()
-        r = false
     }
 
-    fun update(){ start(stats, m, d) }
+    override fun onBackPressed(){
+        if(d != null){ d = null } else{ if(m != null){ m = null } else{ super.onBackPressed(); return } }
+        start()
+    }
 
-    fun changeE(){ e = !e }
-    fun getE(): Boolean{ return e }
+    override fun onDestroy() {
+        Data.stat = null
+        super.onDestroy()
+    }
 
-    fun start(lS: Stats, lM: Int?, lD: Int?) {
-        if(lM == null && lD == null && e == false){ e = true }
 
+    fun isActive(): Boolean{ return active }
+    fun back(): Boolean{ if(d != null){ d = null } else{ if(m != null){ m = null } else{ return false } }; return true }
+
+    fun start(lM: Int? = m, lD: Int? = d) {
         binding = ActivityStatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         m = lM
         d = lD
-
-        stats = lS
-        stats.cheackUpdate()
+        Data.stats.cheackUpdate()
 
         var args = arrayOf(m, d, null)
         var index = if (d != null) {
@@ -83,12 +71,12 @@ class Stat: AppCompatActivity() {
             }
         }
 
-        var size = stats.getSize(m, d)
-        var maxSize = stats.getMaxSize(m, d)
+        var size = Data.stats.getSize(m, d)
+        var maxSize = Data.stats.getMaxSize(m, d)
         var parentSize = if (d != null) {
-            stats.getSize(m)
+            Data.stats.getSize(m)
         } else {
-            stats.getSize()
+            Data.stats.getSize()
         } - 1
 
         with(binding) {
@@ -100,7 +88,7 @@ class Stat: AppCompatActivity() {
 
             args[index] = 0
             while (i++ < size) {
-                var value = stats.getCount(args[0]!!, args[1], args[2])
+                var value = Data.stats.getCount(args[0]!!, args[1], args[2])
 
                 args[index] = args[index]!! + 1
                 if (value > maxValue) {
@@ -109,9 +97,9 @@ class Stat: AppCompatActivity() {
             }
 
             args[index] = size - 1
-            var target = stats.getTarget(m, d)
+            var target = Data.stats.getTarget(m, d)
 
-            var date = stats.getTime(args[0]!!, args[1], args[2])
+            var date = Data.stats.getTime(args[0]!!, args[1], args[2])
             headline.text = date[0][index]
             if (m == null) {
                 left.visibility = View.GONE; right.visibility = View.GONE
@@ -120,9 +108,7 @@ class Stat: AppCompatActivity() {
                     right.visibility = View.GONE
                 } else {
                     right.setOnClickListener(
-                        Listener2(
-                            this@Stat,
-                            stats,
+                        Listener(
                             arrayListOf<Int?>(m, d),
                             index,
                             -1
@@ -135,9 +121,7 @@ class Stat: AppCompatActivity() {
                     left.visibility = View.GONE
                 } else {
                     left.setOnClickListener(
-                        Listener2(
-                            this@Stat,
-                            stats,
+                        Listener(
                             arrayListOf<Int?>(m, d),
                             index,
                             1
@@ -148,7 +132,7 @@ class Stat: AppCompatActivity() {
                 }
             }
 
-            var value = stats.getCount(m, d)
+            var value = Data.stats.getCount(m, d)
             var percent = value / target
             var width = screenWidth!! * percent
 
@@ -157,11 +141,11 @@ class Stat: AppCompatActivity() {
                 progressBar.layoutParams.width = if(percent < 1){ width.toInt() } else{ screenWidth!! }
             } else{ progressBar.visibility = View.INVISIBLE }
 
-            progressValue.text = "Прогрес: " + Stats.round(percent * 100) + " %"
-            averageAndMax.text = "Максимум кроків: " + maxValue.toInt().toString() + ".\nСередня кількість: " + Stats.round(value / size.toFloat()) + "."
+            progressValue.text = "Прогрес: " + round(percent * 100) + " %"
+            averageAndMax.text = "Максимум кроків: " + maxValue.toInt().toString() + ".\nСередня кількість: " + round(value / size.toFloat()) + "."
 
             diagramsBack.text = "Назад"
-            diagramsBack.setOnClickListener(Listener2(this@Stat, stats, if(d != null){ arrayListOf(m, null) } else{ arrayListOf(null, null) }))
+            diagramsBack.setOnClickListener(Listener())
 
             if(maxValue == 0f){ maxValue = 1f }
 
@@ -173,23 +157,22 @@ class Stat: AppCompatActivity() {
                 var button = findViewById<TextView>(constraintLayout.getChildAt(0).id)
 
                 if (args[index]!! > -1) {
-                    value = (diagram.layoutParams.height * (stats.getCount(args[0], args[1], args[2]) / maxValue)).toInt()
+                    value = (diagram.layoutParams.height * (Data.stats.getCount(args[0], args[1], args[2]) / maxValue)).toInt()
                     if (value != 0) {
                         view.layoutParams.height = value
-                        view.setOnClickListener(Listener(this@Stat, stats, args[0], args[1], args[2]))
                         if (view.visibility == View.GONE || view.visibility == View.INVISIBLE) { view.visibility = View.VISIBLE }
 
                     } else { view.visibility = View.INVISIBLE }
 
-                    value = (screenWidth!! * (stats.getCount(args[0], args[1], args[2]) / stats.getTarget(args[0], args[1], args[2]))).toInt()
+                    value = (screenWidth!! * (Data.stats.getCount(args[0], args[1], args[2]) / Data.stats.getTarget(args[0], args[1], args[2]))).toInt()
                     if (value != 0) {
                         progressView.layoutParams.width = value
                         if (progressView.visibility == View.GONE || progressView.visibility == View.INVISIBLE) { progressView.visibility = View.VISIBLE }
 
                     } else { progressView.visibility = View.INVISIBLE }
 
-                    button.text = stats.getTime(args[0], args[1], args[2])[1][index] + " — " + stats.getCount(args[0]!!, args[1], args[2]).toString()
-                    if(index != 2){ constraintLayout.setOnClickListener(Listener2(this@Stat, stats, arrayListOf(args[0], args[1]))) } else{ constraintLayout.setOnClickListener{} }
+                    button.text = Data.stats.getTime(args[0], args[1], args[2])[1][index] + " — " + Data.stats.getCount(args[0]!!, args[1], args[2]).toString()
+                    if(index != 2){ constraintLayout.setOnClickListener(Listener(arrayListOf(args[0], args[1]))) } else{ constraintLayout.setOnClickListener{} }
 
                     if(constraintLayout.visibility == Button.GONE) {constraintLayout.visibility = ConstraintLayout.VISIBLE }
 
@@ -213,26 +196,26 @@ class Stat: AppCompatActivity() {
             } while (--count != -1)
         }
     }
-
-    override fun onBackPressed(){
-       if(d != null){ d = null } else{ if(m != null){ m = null } else{ super.onBackPressed(); return } }
-       update()
-    }
 }
 
-class Listener(val stat: Stat, var stats: Stats, val arg1: Int? = null, val arg2: Int? = null, val arg3: Int? = null): View.OnClickListener{
+class Listener(var args: ArrayList<Int?>? = null, var index: Int? = null, var add: Int? = null): View.OnClickListener{
     override fun onClick(p0: View?) {
-        //Toast.makeText(stat, stats.getTime(arg1!!, arg2, arg3)[1], Toast.LENGTH_SHORT).show()
-    }
-}
+        with(Data.stat!!){
+            if(args == null){
+                if(!!back()){
+                    finish()
+                    return
+                }
+                else{
+                    start()
+                }
+            }
+            else{
+                index = index!! - 1
+                args!![index!!] = args!![index!!]!! + add!!
 
-class Listener2(var parent: Stat, var arg1: Stats, var arg2: ArrayList<Int?>, var index: Int? = null, var add: Int? = null): View.OnClickListener{
-    override fun onClick(p0: View?) {
-        if(index != null){
-            index = index!! - 1
-            arg2[index!!] = arg2[index!!]!! + add!!
+                start(args!![0], args!![1])
+            }
         }
-
-        if(arg2[0] != null || arg2[0] != null){ if(parent.getE()){ parent.changeE() }; parent.start(arg1, arg2[0], arg2[1]) } else{ if(parent.getE()){ parent.finish() } else{ parent.changeE(); parent.start(arg1, arg2[0], arg2[1]) } }
     }
 }

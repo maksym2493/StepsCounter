@@ -3,7 +3,6 @@ package com.example.stepcounterwef
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -11,88 +10,66 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.stepcounterwef.Tools.Companion.getRandomColor
+import com.example.stepcounterwef.Tools.Companion.rewriteDigit
+import com.example.stepcounterwef.Tools.Companion.round
 import com.example.stepcounterwef.databinding.ActivityMainBinding
 import java.io.File
 import java.lang.System.exit
+import java.lang.Thread.sleep
 
-class MainActivity: AppCompatActivity() {
-    private lateinit var lvl: Level
-    private lateinit var stats: Stats
+class MainActivity: AppCompatActivity(), Runnable{
+    private var active = true
 
+    private lateinit var stepsCounter: StepsCounter
     private lateinit var binding: ActivityMainBinding
 
     companion object{
         var r = false
-        var stat: Stat? = null
         private var windowSize: Int? = null
-
-        fun rewriteDigit(digit: Int): String{
-            var res = ""
-            var count = 0
-            digit.toString().reversed().forEach{ if(count == 3){ res = " " + res; count = 0 } else{ count += 1 }; res = it + res }
-
-            return res
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Data.init(filesDir)
+        Thread(this).start()
+
         r = true
-        var dir = File(filesDir, "data")
+        var dir = File(filesDir, "Data")
         if (!dir.exists()) {
             dir.mkdir()
         }
 
-        lvl = Level(filesDir)
-        stats = Stats(filesDir)
-
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) { ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACTIVITY_RECOGNITION), 100) } else{
-            StepsCounter.lvl = lvl
-            StepsCounter.stats = stats
-            StepsCounter.context = this
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){ startForegroundService(Intent(this, StepsCounter::class.java)) }
-
-            start()
-        }
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) { ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACTIVITY_RECOGNITION), 100) } else{ stepsCounter = StepsCounter(true); start() }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray){
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            StepsCounter.lvl = lvl
-            StepsCounter.stats = stats
-            StepsCounter.context = this
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){ startForegroundService(Intent(this, StepsCounter::class.java)) }
-
-            start()
-        } else{ finish(); exit(0) }
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) { stepsCounter = StepsCounter(true); start() } else{ finish(); exit(0) }
     }
 
     fun start(){
-        stats.cheackUpdate()
+        Data.stats.cheackUpdate()
         binding = ActivityMainBinding.inflate(layoutInflater)
         windowSize = (windowManager.defaultDisplay.width - 20 * binding.diagram.layoutParams.height / 200f).toInt()
 
         setContentView(binding.root)
 
         with(binding){
-            var expLevel = lvl.get_exp()
+            var expLevel = Data.lvl.get_exp()
             var progress = expLevel[0] / expLevel[1].toFloat()
 
-            level.text = "Рівень: " +  rewriteDigit(lvl.get_lvl())
-            exp.text = rewriteDigit(expLevel[0]) + " з " + rewriteDigit(expLevel[1]) + " [ " + Stats.round(progress * 100) + " % ]"
+            level.text = "Рівень: " +  rewriteDigit(Data.lvl.get_lvl())
+            exp.text = rewriteDigit(expLevel[0]) + " з " + rewriteDigit(expLevel[1]) + " [ " + round(progress * 100) + " % ]"
 
             var width = (progress * windowSize!!).toInt()
-            if(width != 0){ levelProgress.layoutParams.width = width; levelProgress.setBackgroundColor(Color.parseColor(Stat.getRandomColor())) } else{ levelProgress.visibility = View.INVISIBLE }
+            if(width != 0){ levelProgress.layoutParams.width = width; levelProgress.setBackgroundColor(Color.parseColor(getRandomColor())) } else{ levelProgress.visibility = View.INVISIBLE }
 
             showTargets()
             drawDiagram()
 
             showStatistic.setOnClickListener{
-                Stat.data1 = stats
-                Stat.data2 = arrayListOf(null, null)
-
                 startActivity(Intent(this@MainActivity, Stat::class.java))
             }
 
@@ -111,10 +88,10 @@ class MainActivity: AppCompatActivity() {
                                         if(target <= 0){ Toast.makeText(this@MainActivity, "Ціль не може дорівнювати нулю або бути меншою за нього.", Toast.LENGTH_SHORT).show() } else{
                                             if(target > 100000){ Toast.makeText(this@MainActivity, "Ціль не може більшо за 100 000.", Toast.LENGTH_SHORT).show() } else{
                                                 if(target % 10 != 0){ Toast.makeText(this@MainActivity, "Ціль повинна націло ділитися на 10.", Toast.LENGTH_SHORT).show() } else{
-                                                    if(stats.getTarget(0, 0).toInt() == target){ Toast.makeText(this@MainActivity, "Вказана ціль є поточною.", Toast.LENGTH_SHORT).show() } else{
+                                                    if(Data.stats.getTarget(0, 0).toInt() == target){ Toast.makeText(this@MainActivity, "Вказана ціль є поточною.", Toast.LENGTH_SHORT).show() } else{
                                                         end = true
                                                         newTarget.setText("")
-                                                        stats.setTarget(target)
+                                                        Data.stats.setTarget(target)
                                                         Toast.makeText(this@MainActivity, "Встановлена ціль в " + rewriteDigit(target) + " кроків.", Toast.LENGTH_SHORT).show()
 
                                                         start()
@@ -138,19 +115,28 @@ class MainActivity: AppCompatActivity() {
     }
 
     override fun onResume() {
-        super.onResume()
         r = true
         start()
+        stepsCounter.stopInBackGround()
+
+        super.onResume()
     }
 
     override fun onPause() {
-        super.onPause()
         r = false
+        stepsCounter.startInBackground()
+
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        active = false
+        super.onDestroy()
     }
 
     fun drawDiagram(){
         with(binding){
-            var counts = stats.get_last_counts()
+            var counts = Data.stats.get_last_counts()
 
             var maxValue = 0f
             var totalCount = 0f
@@ -158,7 +144,7 @@ class MainActivity: AppCompatActivity() {
             var i = counts.size - 1
             do{ totalCount += counts[i]; if(counts[i] > maxValue){ maxValue = counts[i].toFloat() } } while(--i != -1)
 
-            averageAndMax.text = "Максимум кроків: " + maxValue.toInt().toString() + ".\nСередня кількість: " + Stats.round(totalCount / counts.size.toFloat()) + "."
+            averageAndMax.text = "Максимум кроків: " + maxValue.toInt().toString() + ".\nСередня кількість: " + round(totalCount / counts.size.toFloat()) + "."
 
             i = 0
             if(maxValue == 0f){ maxValue = 1f }
@@ -169,7 +155,7 @@ class MainActivity: AppCompatActivity() {
                     var height = ((counts.removeAt(0) / maxValue) * diagram.layoutParams.height).toInt()
 
                     if(height != 0){
-                        view.setBackgroundColor(Color.parseColor(Stat.getRandomColor()))
+                        view.setBackgroundColor(Color.parseColor(getRandomColor()))
                         if(view.visibility == View.INVISIBLE){ view.visibility = View.VISIBLE }
                         if(height < windowSize!!){ view.layoutParams.height = height } else{ view.layoutParams.height = windowSize!! }
                     } else{ view.visibility = View.INVISIBLE }
@@ -181,15 +167,15 @@ class MainActivity: AppCompatActivity() {
     fun showTargets(){
         with(binding){
             var targets = arrayOf(
-                stats.getTarget(0, 0),
-                stats.getTarget(0),
-                stats.getTarget()
+                Data.stats.getTarget(0, 0),
+                Data.stats.getTarget(0),
+                Data.stats.getTarget()
             )
 
             var stepsCount = listOf(
-                stats.getCount(0, 0),
-                stats.getCount(0),
-                stats.getCount()
+                Data.stats.getCount(0, 0),
+                Data.stats.getCount(0),
+                Data.stats.getCount()
             )
 
             var i = 2
@@ -202,7 +188,7 @@ class MainActivity: AppCompatActivity() {
                 var width = ((stepsCount[i] / targets[i]) * windowSize!!).toInt()
                 if(width != 0){
                     if(width < windowSize!!){ listOfViews[i].layoutParams.width = width } else{ listOfViews[i].layoutParams.width = windowSize!! }
-                    listOfViews[i].setBackgroundColor(Color.parseColor(Stat.getRandomColor()))
+                    listOfViews[i].setBackgroundColor(Color.parseColor(getRandomColor()))
                 } else{ listOfViews[i].visibility = View.INVISIBLE }
             } while(--i != -1)
         }
@@ -216,6 +202,22 @@ class MainActivity: AppCompatActivity() {
 
                 Toast.makeText(this@MainActivity, "Зміна скасована.", Toast.LENGTH_SHORT).show()
             } else{ super.onBackPressed() }
+        }
+    }
+
+    override fun run(){
+        while(active){
+            sleep(1000)
+
+            Data.init(filesDir)
+            if(r){
+                start()
+            }
+            else{
+                if(Data.stat != null && Data.stat!!.isActive()){
+                    Data.stat!!.start()
+                }
+            }
         }
     }
 }

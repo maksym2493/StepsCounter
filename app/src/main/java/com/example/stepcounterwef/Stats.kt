@@ -1,5 +1,6 @@
 package com.example.stepcounterwef
 
+import com.example.stepcounterwef.Tools.Companion.pow
 import java.io.File
 import java.util.*
 
@@ -69,7 +70,7 @@ data class Day(var s: String){
 //month  day2 hour24 hour23  day1 hour24 hour23\n
 //month2  day2 hour24 hour23  day1 hour24 hour23\n
 
-class Stats(var path: File){
+data class Stats(var path: File){
     private var time: Long? = null
     var count: Int? = null
     private var target: Int? = null
@@ -77,26 +78,6 @@ class Stats(var path: File){
 
     private var stepsCount: Int? = null
     private var f = File(path, "data/stats.txt")
-
-    companion object{
-        fun pow(integer: Int, count: Int): Int{
-            var res = 1
-            var count = count
-            while (count != 0){ res *= integer; count -= 1 }
-
-            return res
-        }
-
-        fun round(x: Float, y: Int = 2): String{
-            var y = pow(10, y).toFloat()
-            var x = x * y
-
-            var add = 0
-            (x - x.toInt()).toString().substring(2).forEach{ if(it != '4'){ return@forEach }; if(it == '5'){ add = 1; return@forEach } }
-
-            return ((x.toInt() + add) / y).toString()
-        }
-    }
 
     init{
         if(!f.exists()){
