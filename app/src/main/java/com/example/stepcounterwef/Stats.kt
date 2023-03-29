@@ -77,7 +77,7 @@ data class Stats(var path: File){
     private var stats: ArrayList<Month> = ArrayList<Month>()
 
     private var stepsCount: Int? = null
-    private var f = File(path, "data/stats.txt")
+    private var f = File(path, "Data/stats.txt")
 
     init{
         if(!f.exists()){

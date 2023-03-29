@@ -14,14 +14,12 @@ import com.example.stepcounterwef.Tools.Companion.getRandomColor
 import com.example.stepcounterwef.Tools.Companion.rewriteDigit
 import com.example.stepcounterwef.Tools.Companion.round
 import com.example.stepcounterwef.databinding.ActivityMainBinding
-import java.io.File
 import java.lang.System.exit
-import java.lang.Thread.sleep
+import java.util.*
 
-class MainActivity: AppCompatActivity(), Runnable{
+class MainActivity: AppCompatActivity(){
     private var active = true
 
-    private lateinit var stepsCounter: StepsCounter
     private lateinit var binding: ActivityMainBinding
 
     companion object{
@@ -32,21 +30,16 @@ class MainActivity: AppCompatActivity(), Runnable{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Data.main = this
         Data.init(filesDir)
-        Thread(this).start()
 
-        r = true
-        var dir = File(filesDir, "Data")
-        if (!dir.exists()) {
-            dir.mkdir()
-        }
-
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) { ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACTIVITY_RECOGNITION), 100) } else{ stepsCounter = StepsCounter(true); start() }
+        active = true
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) { ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACTIVITY_RECOGNITION), 100) } else{ startService(Intent(this, StepCounter::class.java)); start() }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray){
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) { stepsCounter = StepsCounter(true); start() } else{ finish(); exit(0) }
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) { startService(Intent(this, StepCounter::class.java)); start() } else{ finish(); exit(0) }
     }
 
     fun start(){
@@ -115,24 +108,28 @@ class MainActivity: AppCompatActivity(), Runnable{
     }
 
     override fun onResume() {
-        r = true
+        active = true
         start()
-        stepsCounter.stopInBackGround()
 
         super.onResume()
     }
 
     override fun onPause() {
-        r = false
-        stepsCounter.startInBackground()
+        active = false
 
         super.onPause()
     }
 
     override fun onDestroy() {
         active = false
+        Data.main = null
+
         super.onDestroy()
     }
+
+    fun getDelay(): Long{ return (60 - Date().toString().split(" ")[3].split(":")[2].toLong()) * 1000 }
+
+    fun isActive(): Boolean{ return active }
 
     fun drawDiagram(){
         with(binding){
@@ -202,22 +199,6 @@ class MainActivity: AppCompatActivity(), Runnable{
 
                 Toast.makeText(this@MainActivity, "Зміна скасована.", Toast.LENGTH_SHORT).show()
             } else{ super.onBackPressed() }
-        }
-    }
-
-    override fun run(){
-        while(active){
-            sleep(1000)
-
-            Data.init(filesDir)
-            if(r){
-                start()
-            }
-            else{
-                if(Data.stat != null && Data.stat!!.isActive()){
-                    Data.stat!!.start()
-                }
-            }
         }
     }
 }

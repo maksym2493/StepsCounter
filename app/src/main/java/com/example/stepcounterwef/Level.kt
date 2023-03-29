@@ -7,7 +7,7 @@ class Level(var path: File){
     private var exp: Int? = null
     private var totalExp: Int? = null
 
-    private var f = File(path, "data/level.txt")
+    private var f = File(path, "Data/level.txt")
 
     init{
         if(!f.exists()){ f.writeText("1 0 100") }
@@ -23,7 +23,7 @@ class Level(var path: File){
 
     fun add(count: Int){
         exp = exp!! + count
-        if(exp!! >= totalExp!!){ lvl = lvl!! + 1; exp = exp!! - totalExp!!; totalExp = totalExp!! + 100 }
+        while(exp!! >= totalExp!!){ lvl = lvl!! + 1; exp = exp!! - totalExp!!; totalExp = totalExp!! + 100 }
 
         write()
     }

@@ -39,7 +39,7 @@ class Stat: AppCompatActivity() {
     }
 
     override fun onBackPressed(){
-        if(d != null){ d = null } else{ if(m != null){ m = null } else{ super.onBackPressed(); return } }
+        if(!back()){ super.onBackPressed(); return }
         start()
     }
 
@@ -202,7 +202,7 @@ class Listener(var args: ArrayList<Int?>? = null, var index: Int? = null, var ad
     override fun onClick(p0: View?) {
         with(Data.stat!!){
             if(args == null){
-                if(!!back()){
+                if(!back()){
                     finish()
                     return
                 }
@@ -211,8 +211,10 @@ class Listener(var args: ArrayList<Int?>? = null, var index: Int? = null, var ad
                 }
             }
             else{
-                index = index!! - 1
-                args!![index!!] = args!![index!!]!! + add!!
+                if(index  != null){
+                    index = index!! - 1
+                    args!![index!!] = args!![index!!]!! + add!!
+                }
 
                 start(args!![0], args!![1])
             }
