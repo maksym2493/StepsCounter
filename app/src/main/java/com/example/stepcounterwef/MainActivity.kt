@@ -1,10 +1,15 @@
 package com.example.stepcounterwef
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import android.view.View
+import android.view.View.OnClickListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -14,11 +19,10 @@ import com.example.stepcounterwef.Tools.Companion.getRandomColor
 import com.example.stepcounterwef.Tools.Companion.rewriteDigit
 import com.example.stepcounterwef.Tools.Companion.round
 import com.example.stepcounterwef.databinding.ActivityMainBinding
-import java.lang.System.exit
-import java.util.*
 
 class MainActivity: AppCompatActivity(){
     private var active = true
+    private var gettingPermissions = false
 
     private lateinit var binding: ActivityMainBinding
 
@@ -30,16 +34,94 @@ class MainActivity: AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        active = true
         Data.main = this
         Data.init(filesDir)
 
-        active = true
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) { ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACTIVITY_RECOGNITION), 100) } else{ startService(Intent(this, StepCounter::class.java)); start() }
+        start()
+        cheackActivityRecognitionPermittion()
+    }
+
+    fun cheackActivityRecognitionPermittion(){
+        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED){
+            gettingPermissions = true
+            editAlert(
+                "Activity Recognition",
+                "Для роботи додатка необхідно надати йому дозвіл на підрахунок кроків. Цей дозвіл є обов'язковим. :(",
+                "Надати",
+                {
+                    hideAlert()
+                    ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACTIVITY_RECOGNITION), 100)
+                }
+            )
+        } else{
+            if(gettingPermissions){ gettingPermissions = false }
+
+            cheackBateryOptimization()
+            startService(Intent(this, StepCounter::class.java))
+        }
+    }
+
+    fun cheackBateryOptimization(){
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        if(!powerManager.isIgnoringBatteryOptimizations(packageName)){
+            gettingPermissions = true
+            editAlert(
+                "Battery Optimization",
+                "Для того, щоб додаток запускався автоматично після кожного запуску телефону, необхідно надати дозвіл на ігнорування оптимізації батереї.",
+                "Надати",
+                {
+                    hideAlert()
+                    gettingPermissions = false
+
+                    val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                    intent.data = Uri.parse("package:$packageName")
+                    startActivity(intent)
+                },
+                "Відмовитися",
+                { gettingPermissions = false; hideAlert() }
+            )
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray){
+        cheackActivityRecognitionPermittion()
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) { startService(Intent(this, StepCounter::class.java)); start() } else{ finish(); exit(0) }
+    }
+
+    fun editAlert(title: String, description: String, acceptButton: String, accceptListener: OnClickListener,
+    rejectButton: String? = null, rejectListener: OnClickListener? = null){
+        with(binding){
+            permissionTitle.text = title
+            permissionDesctiption.text = description
+
+            acceptPermission.text = acceptButton
+            acceptPermission.setOnClickListener(accceptListener)
+
+            if(rejectButton != null){
+                if(rejectPermission.visibility == View.INVISIBLE){ rejectPermission.visibility = View.VISIBLE }
+
+                rejectPermission.text = rejectButton
+                rejectPermission.setOnClickListener(rejectListener)
+            } else{ rejectPermission.visibility = View.INVISIBLE }
+        }
+
+        showAlert()
+    }
+
+    fun showAlert(){
+        with(binding){
+            main.visibility = ConstraintLayout.GONE
+            requestPermission.visibility = ConstraintLayout.VISIBLE
+        }
+    }
+
+    fun hideAlert(){
+        System.out.println("Hide")
+        with(binding){
+            main.visibility = ConstraintLayout.VISIBLE
+            requestPermission.visibility = ConstraintLayout.GONE
+        }
     }
 
     fun start(){
@@ -109,7 +191,7 @@ class MainActivity: AppCompatActivity(){
 
     override fun onResume() {
         active = true
-        start()
+        if(!gettingPermissions){ start() }
 
         super.onResume()
     }
@@ -126,8 +208,6 @@ class MainActivity: AppCompatActivity(){
 
         super.onDestroy()
     }
-
-    fun getDelay(): Long{ return (60 - Date().toString().split(" ")[3].split(":")[2].toLong()) * 1000 }
 
     fun isActive(): Boolean{ return active }
 

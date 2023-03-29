@@ -1,6 +1,10 @@
 package com.example.stepcounterwef
 
+import android.content.Intent
+import com.example.stepcounterwef.Tools.Companion.notify
 import com.example.stepcounterwef.Tools.Companion.pow
+import com.example.stepcounterwef.Tools.Companion.rewriteDigit
+import com.example.stepcounterwef.Tools.Companion.round
 import java.io.File
 import java.util.*
 
@@ -117,11 +121,62 @@ data class Stats(var path: File){
                     if(stats.size == 12){ stats.removeAt(11) }
 
                     stats.add(0, Month("0  0 0"))
-                } else{ stats[0].newDay() }
+
+                    notify(
+                        "NewDay",
+                        get_notification_title(),
+                        get_notification_text(1, 0),
+                        get_notification_intent(1, 0)
+                    )
+
+                    notify(
+                        "NewMonth",
+                        get_notification_title(1),
+                        get_notification_text(1),
+                        get_notification_intent(1)
+                    )
+                } else{
+                    stats[0].newDay()
+
+                    notify(
+                        "NewDay",
+                        get_notification_title(),
+                        get_notification_text(0, 1),
+                        get_notification_intent(0, 1)
+                    )
+                }
             } else{ stats[0].newHour() }
         }
 
         if(update_stats){ write() }
+    }
+
+    fun get_notification_title(type: Int = 0): String{
+        var res = "Звіт за "
+        var date = Date(time!! - 1000).toString().split(" ")
+        if(type == 0){ res += date[2] + "-е" } else{ res += date[1] }
+
+        return res
+    }
+
+    fun get_notification_text(m: Int?, d: Int? = null): String{
+        var count = getCount(m, d)
+        var target = getTarget(m, d).toInt()
+
+        var delta = target - count
+        var moduleDelta = delta % 10
+        return if(delta <= 0){ "Ціль досягнута!\nЗроблено: " + rewriteDigit(count) + " з " + rewriteDigit(target) + " [ " + round((count / target.toFloat()) * 100) + "% ]" } else{
+            "Нехватило " + rewriteDigit(delta) + "-" + if(moduleDelta == 1){ "го" } else{ if(moduleDelta in arrayOf(2, 3, 4)){ "х" } else{ "ти" } } + " крок" + if(moduleDelta != 1){ "ів" } else{ "а" } + " [ " + round((count / target.toFloat()) * 100) + "% ]"
+        }
+    }
+
+    fun get_notification_intent(m: Int, d: Int? = null): Intent{
+        var intent = Intent(Data.stepCounter, Stat::class.java)
+
+        intent.putExtra("m", m)
+        if(d != null){ intent.putExtra("d", d) }
+
+        return intent
     }
 
     fun add(c: Int){ stats[0].add(c); write() }
@@ -150,11 +205,7 @@ data class Stats(var path: File){
         if(d != null){ return target!!.toFloat() }
         if(m != null){ return (getMaxSize(m) * target!!).toFloat() }
 
-        var size = 0
-        var times = stats.size - 1
-        do{ size += getMaxSize(times) } while(--times != -1)
-
-        return (size * target!!).toFloat()
+        return (365 * target!!).toFloat()
     }
 
     fun getTime(m: Int? = null, d: Int? = null, h: Int? = null): Array<Array<String>>{

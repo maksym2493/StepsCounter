@@ -21,6 +21,9 @@ class Stat: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        m = getExtra("m")
+        d = getExtra("d")
+
         Data.stat = this
         start()
     }
@@ -195,6 +198,11 @@ class Stat: AppCompatActivity() {
                 }
             } while (--count != -1)
         }
+    }
+
+    fun getExtra(name: String): Int?{
+        var extra = intent.getIntExtra(name, -1)
+        if(extra == -1){ return null } else{ return extra }
     }
 }
 

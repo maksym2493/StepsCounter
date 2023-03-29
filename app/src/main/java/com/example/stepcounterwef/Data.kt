@@ -6,6 +6,7 @@ class Data{
     companion object{
         var stat: Stat? = null
         var main: MainActivity? = null
+        var stepCounter: StepCounter? = null
 
         lateinit var lvl: Level
         lateinit var stats: Stats

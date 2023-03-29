@@ -1,5 +1,6 @@
 package com.example.stepcounterwef
 
+import com.example.stepcounterwef.Tools.Companion.notify
 import java.io.File
 
 class Level(var path: File){
@@ -23,7 +24,10 @@ class Level(var path: File){
 
     fun add(count: Int){
         exp = exp!! + count
-        while(exp!! >= totalExp!!){ lvl = lvl!! + 1; exp = exp!! - totalExp!!; totalExp = totalExp!! + 100 }
+        while(exp!! >= totalExp!!){
+            lvl = lvl!! + 1; exp = exp!! - totalExp!!; totalExp = totalExp!! + 100
+            notify("NewLevel", "Новий рівень!", "Тепер у Вас " + lvl.toString() + "-й рівень!")
+        }
 
         write()
     }

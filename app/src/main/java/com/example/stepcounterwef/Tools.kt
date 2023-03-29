@@ -1,9 +1,18 @@
 package com.example.stepcounterwef
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import androidx.core.app.NotificationCompat
 import java.util.*
 
 class Tools{
     companion object{
+        var notificationId = 2
+
         fun getRandomColor(): String{
             var color = "#"
             var random = Random()
@@ -18,7 +27,7 @@ class Tools{
         fun rewriteDigit(digit: Int): String{
             var res = ""
             var count = 0
-            digit.toString().reversed().forEach{ if(count == 3){ res = " " + res; count = 0 } else{ count += 1 }; res = it + res }
+            digit.toString().reversed().forEach{ if(count == 3){ res = " " + res; count = 1 } else{ count += 1 }; res = it + res }
 
             return res
         }
@@ -39,6 +48,32 @@ class Tools{
             (x - x.toInt()).toString().substring(2).forEach{ if(it != '4'){ return@forEach }; if(it == '5'){ add = 1; return@forEach } }
 
             return ((x.toInt() + add) / y).toString()
+        }
+
+        fun notify(name: String, title: String, text: String, intent: Intent = Intent(Data.stepCounter, MainActivity::class.java)){
+            val manager = Data.stepCounter!!.getSystemService(NotificationManager::class.java)
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                val channel = NotificationChannel(
+                    name,
+                    name,
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
+
+                manager.createNotificationChannel(channel)
+            }
+
+
+            var notification = NotificationCompat.Builder(Data.stepCounter!!, name)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentIntent(PendingIntent.getActivity(Data.stepCounter, 0, intent, 0))
+                .build()
+
+            manager.notify(notificationId, notification)
+
+            notificationId += 1
         }
     }
 }
