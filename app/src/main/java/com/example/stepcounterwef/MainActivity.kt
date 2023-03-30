@@ -19,6 +19,7 @@ import com.example.stepcounterwef.Tools.Companion.getRandomColor
 import com.example.stepcounterwef.Tools.Companion.removeNotification
 import com.example.stepcounterwef.Tools.Companion.rewriteDigit
 import com.example.stepcounterwef.Tools.Companion.round
+import com.example.stepcounterwef.Tools.Companion.updateView
 import com.example.stepcounterwef.databinding.ActivityMainBinding
 
 class MainActivity: AppCompatActivity(){
@@ -144,12 +145,7 @@ class MainActivity: AppCompatActivity(){
     }
 
     fun startServices(){
-        startService(Intent(this, StepCounter::class.java))
-    }
-
-    fun updateView(view: View){
-        view.requestLayout()
-        view.invalidate()
+        ContextCompat.startForegroundService(this, Intent(this, StepCounter::class.java))
     }
 
     fun start(){

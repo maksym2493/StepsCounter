@@ -13,7 +13,8 @@ import android.hardware.SensorManager
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
+import android.os.PowerManager
+import android.os.PowerManager.WakeLock
 import androidx.core.app.NotificationCompat
 import com.example.stepcounterwef.Tools.Companion.notify
 import com.example.stepcounterwef.Tools.Companion.pow
@@ -40,33 +41,40 @@ class StepCounter: Service(), SensorEventListener{
     lateinit private var handler: Handler
     lateinit private var runnable: Runnable
 
+    lateinit private var wakeLock: WakeLock
+
     override fun onCreate() {
+        super.onCreate()
+
         Data.stepCounter = this
 
         read()
-        createNotification()
-        startForeground(1, notification.build())
 
-        handler = Handler(Looper.getMainLooper())
+        handler = Handler()
         runnable = object: Runnable{
             override fun run() {
-                CoroutineScope(Dispatchers.IO).launch { Data.stats.checkUpdate() }
-                notify("Debug", "Debug", "Working...", Date().toString())
+                CoroutineScope(Dispatchers.IO).launch{ Data.stats.checkUpdate() }
+
+                var file = File("/storage/emulated/0", "log.txt")
+                file.writeText(Date().toString() + "\n" + file.readText())
 
                 handler.postDelayed(this, getDelay())
             }
         }
 
-        handler.postDelayed(runnable, getDelay())
-
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
 
-        super.onCreate()
+        var powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "StepCounter::WakeLockTag")
+
+        wakeLock.acquire()
+        createNotification()
+        startForeground(1, notification.build())
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if(!active){ active = true; sensorManager.registerListener(this, stepCounterSensor, SensorManager.SENSOR_DELAY_NORMAL) }
+        if(!active){ active = true; handler.postDelayed(runnable, getDelay()); sensorManager.registerListener(this, stepCounterSensor, SensorManager.SENSOR_DELAY_NORMAL) }
 
         return START_STICKY
     }
@@ -74,7 +82,11 @@ class StepCounter: Service(), SensorEventListener{
     override fun onDestroy() {
         active = false
         Data.stepCounter = null
+        handler.removeCallbacks(runnable)
         sensorManager.unregisterListener(this, stepCounterSensor)
+
+        wakeLock.release()
+
         super.onDestroy()
     }
 
@@ -87,7 +99,7 @@ class StepCounter: Service(), SensorEventListener{
             val channel = NotificationChannel(
                 "DailyTarget",
                 "Денна ціль",
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_HIGH
             )
 
             val manager = getSystemService(NotificationManager::class.java)
@@ -100,6 +112,7 @@ class StepCounter: Service(), SensorEventListener{
         notification = NotificationCompat.Builder(this, "DailyTarget")
             .setContentTitle("Денна ціль")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setPriority(NotificationManager.IMPORTANCE_HIGH)
             .setContentIntent(PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_IMMUTABLE))
 
         updateNotification()
@@ -171,6 +184,7 @@ class StepCounter: Service(), SensorEventListener{
         var delay = 3600.toLong() * 1000
         Date().toString().split(" ")[3].split(":").subList(1, 3).forEach{ delay -= it.toLong() * pow(60, i--) * 1000 }
 
-        return delay
+        var maxValue = (60 * 30 * 1000L)
+        return maxValue - delay % maxValue
     }
 }

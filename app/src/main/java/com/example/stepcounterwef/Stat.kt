@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.stepcounterwef.Tools.Companion.getRandomColor
 import com.example.stepcounterwef.Tools.Companion.round
+import com.example.stepcounterwef.Tools.Companion.updateView
 import com.example.stepcounterwef.databinding.ActivityStatBinding
 
 class Stat: AppCompatActivity() {
@@ -21,6 +22,9 @@ class Stat: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        binding = ActivityStatBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         removeNotification()
 
@@ -71,9 +75,6 @@ class Stat: AppCompatActivity() {
     fun isActive(): Boolean{ return active }
 
     fun start(lM: Int? = m, lD: Int? = d) {
-        binding = ActivityStatBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         m = lM
         d = lD
         Data.stats.checkUpdate()
@@ -157,7 +158,10 @@ class Stat: AppCompatActivity() {
 
             if(width >= 1){
                 progressBar.setBackgroundColor(Color.parseColor(getRandomColor()))
+                if(progressBar.visibility == View.INVISIBLE){ progressBar.visibility = View.VISIBLE }
                 progressBar.layoutParams.width = if(percent < 1){ width.toInt() } else{ screenWidth!! }
+
+                updateView(progressBar)
             } else{ progressBar.visibility = View.INVISIBLE }
 
             progressValue.text = "Прогрес: " + round(percent * 100) + " %"
@@ -178,12 +182,16 @@ class Stat: AppCompatActivity() {
                         view.layoutParams.height = value
                         if (view.visibility == View.GONE || view.visibility == View.INVISIBLE) { view.visibility = View.VISIBLE }
 
+                        updateView(view)
+
                     } else { view.visibility = View.INVISIBLE }
 
                     value = (screenWidth!! * (Data.stats.getCount(args[0], args[1], args[2]) / Data.stats.getTarget(args[0], args[1], args[2]))).toInt()
                     if (value != 0) {
                         progressView.layoutParams.width = value
                         if (progressView.visibility == View.GONE || progressView.visibility == View.INVISIBLE) { progressView.visibility = View.VISIBLE }
+
+                        updateView(progressView)
 
                     } else { progressView.visibility = View.INVISIBLE }
 
