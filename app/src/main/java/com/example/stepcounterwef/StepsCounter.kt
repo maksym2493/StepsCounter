@@ -181,8 +181,8 @@ class StepCounter: Service(), SensorEventListener{
 
     fun getDelay(): Long{
         var i = 1
-        var delay = 3600.toLong() * 1000
-        Date().toString().split(" ")[3].split(":").subList(1, 3).forEach{ delay -= it.toLong() * pow(60, i--) * 1000 }
+        var delay = 0L
+        Date().toString().split(" ")[3].split(":").subList(1, 3).forEach{ delay += it.toLong() * pow(60, i--) * 1000 }
 
         var maxValue = (60 * 30 * 1000L)
         return maxValue - delay % maxValue
