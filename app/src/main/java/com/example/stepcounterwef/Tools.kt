@@ -91,6 +91,22 @@ class Tools{
             notificationId += 1
         }
 
+        fun removeNotification(intent: Intent): Boolean{
+            val notificationId = intent.getIntExtra("notificationId", 0)
+            if(notificationId != 0){
+                val notificationManager = Data.stepCounter!!.getSystemService(NotificationManager::class.java)
+
+                for(notification in notificationManager.activeNotifications){
+                    if(notification.id == notificationId){
+                        notificationManager.cancel(notificationId)
+                        return true
+                    }
+                }
+            }
+
+            return false
+        }
+
         fun getMonth(name: String): String{
             for(month in monthes){ if(month[0] == name){ return month[1] } }
             return ""

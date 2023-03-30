@@ -1,6 +1,5 @@
 package com.example.stepcounterwef
 
-import android.app.NotificationManager
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -30,21 +29,11 @@ class Stat: AppCompatActivity() {
     }
 
     fun removeNotification(){
-        val notificationId = intent.getIntExtra("notificationId", 0)
-        if(notificationId != 0){
-            val notificationManager = getSystemService(NotificationManager::class.java)
+        if(Tools.removeNotification(intent)){
+            val args = Data.stats.getByTime(intent.getLongExtra("eventTime", 0))
 
-            for(notification in notificationManager.activeNotifications){
-                if(notification.id == notificationId){
-                    notificationManager.cancel(notificationId)
-                    val args = Data.stats.getByTime(intent.getLongExtra("eventTime", 0))
-
-                    m = args[0]
-                    d = if(intent.getBooleanExtra("d", true)){ args[1] } else{ null }
-
-                    break
-                }
-            }
+            m = args[0]
+            d = if(intent.getBooleanExtra("d", true)){ args[1] } else{ null }
         }
     }
 

@@ -34,5 +34,4 @@ class Level(var path: File){
 
     fun get_lvl(): Int{ return lvl!! }
     fun get_exp(): Array<Int>{ return arrayOf(exp!!, totalExp!!) }
-
 }

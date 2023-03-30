@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.stepcounterwef.Tools.Companion.getRandomColor
+import com.example.stepcounterwef.Tools.Companion.removeNotification
 import com.example.stepcounterwef.Tools.Companion.rewriteDigit
 import com.example.stepcounterwef.Tools.Companion.round
 import com.example.stepcounterwef.databinding.ActivityMainBinding
@@ -34,11 +35,17 @@ class MainActivity: AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        windowSize = (windowManager.defaultDisplay.width - 20 * binding.diagram.layoutParams.height / 200f).toInt()
+
         active = true
         Data.main = this
         Data.init(filesDir)
 
         start()
+        removeNotification(intent)
         try{ cheackActivityRecognitionPermittion() } catch(e: Exception){ Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show() }
     }
 
@@ -140,12 +147,13 @@ class MainActivity: AppCompatActivity(){
         startService(Intent(this, StepCounter::class.java))
     }
 
+    fun updateView(view: View){
+        view.requestLayout()
+        view.invalidate()
+    }
+
     fun start(){
         Data.stats.checkUpdate()
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        windowSize = (windowManager.defaultDisplay.width - 20 * binding.diagram.layoutParams.height / 200f).toInt()
-
-        setContentView(binding.root)
 
         with(binding){
             var expLevel = Data.lvl.get_exp()
@@ -155,7 +163,7 @@ class MainActivity: AppCompatActivity(){
             exp.text = rewriteDigit(expLevel[0]) + " з " + rewriteDigit(expLevel[1]) + " [ " + round(progress * 100) + " % ]"
 
             var width = (progress * windowSize!!).toInt()
-            if(width != 0){ levelProgress.layoutParams.width = width; levelProgress.setBackgroundColor(Color.parseColor(getRandomColor())) } else{ levelProgress.visibility = View.INVISIBLE }
+            if(width != 0){ levelProgress.layoutParams.width = width; levelProgress.setBackgroundColor(Color.parseColor(getRandomColor())); updateView(levelProgress) } else{ levelProgress.visibility = View.INVISIBLE }
 
             showTargets()
             drawDiagram()
@@ -251,6 +259,8 @@ class MainActivity: AppCompatActivity(){
                         view.setBackgroundColor(Color.parseColor(getRandomColor()))
                         if(view.visibility == View.INVISIBLE){ view.visibility = View.VISIBLE }
                         if(height < windowSize!!){ view.layoutParams.height = height } else{ view.layoutParams.height = windowSize!! }
+
+                        updateView(view)
                     } else{ view.visibility = View.INVISIBLE }
                 } else{ view.visibility = View.INVISIBLE }
             } while(++i != 24)
@@ -282,6 +292,8 @@ class MainActivity: AppCompatActivity(){
                 if(width != 0){
                     if(width < windowSize!!){ listOfViews[i].layoutParams.width = width } else{ listOfViews[i].layoutParams.width = windowSize!! }
                     listOfViews[i].setBackgroundColor(Color.parseColor(getRandomColor()))
+
+                    updateView(listOfViews[i])
                 } else{ listOfViews[i].visibility = View.INVISIBLE }
             } while(--i != -1)
         }
