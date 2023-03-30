@@ -1,10 +1,13 @@
 package com.example.stepcounterwef
 
+import android.app.NotificationManager
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.stepcounterwef.Tools.Companion.getRandomColor
@@ -21,17 +24,38 @@ class Stat: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        m = getExtra("m")
-        d = getExtra("d")
+        removeNotification()
 
         Data.stat = this
         start()
     }
 
+    fun removeNotification(){
+        if(Data.stat != null){ Data.stat!!.finish() }
+
+        val notificationId = intent.getIntExtra("notificationId", 0)
+        if(notificationId != 0){
+            val notificationManager = getSystemService(NotificationManager::class.java)
+
+            for(notification in notificationManager.activeNotifications){
+                if(notification.id == notificationId){
+                    notificationManager.cancel(notificationId)
+                    val args = Data.stats.getByTime(intent.getLongExtra("eventTime", 0))
+
+                    m = args[0]
+                    d = if(intent.getBooleanExtra("d", true)){ args[1] } else{ null }
+
+                    break
+                }
+            }
+        }
+    }
+
     override fun onResume() {
         active = true
-        start()
+        if(Data.main == null){ removeNotification() }
 
+        start()
         super.onResume()
     }
 
@@ -42,7 +66,14 @@ class Stat: AppCompatActivity() {
     }
 
     override fun onBackPressed(){
-        if(!back()){ super.onBackPressed(); return }
+        if(d != null){ d = null } else{ if(m != null){ m = null } else{
+            if(Data.main != null){ super.onBackPressed() } else{
+                finish()
+                startActivity(Intent(this, MainActivity::class.java))
+            }
+            return
+        } }
+
         start()
     }
 
@@ -53,7 +84,6 @@ class Stat: AppCompatActivity() {
 
 
     fun isActive(): Boolean{ return active }
-    fun back(): Boolean{ if(d != null){ d = null } else{ if(m != null){ m = null } else{ return false } }; return true }
 
     fun start(lM: Int? = m, lD: Int? = d) {
         binding = ActivityStatBinding.inflate(layoutInflater)
@@ -76,11 +106,14 @@ class Stat: AppCompatActivity() {
 
         var size = Data.stats.getSize(m, d)
         var maxSize = Data.stats.getMaxSize(m, d)
+        var skipedCount = Data.stats.getSkipedCount(m, d)
         var parentSize = if (d != null) {
             Data.stats.getSize(m)
         } else {
             Data.stats.getSize()
         } - 1
+
+        Toast.makeText(this, skipedCount.toString(), Toast.LENGTH_SHORT).show()
 
         with(binding) {
             var screenWidth = (windowManager.defaultDisplay.width - 20 * diagram.layoutParams.height / 200f).toInt()
@@ -101,8 +134,8 @@ class Stat: AppCompatActivity() {
 
             args[index] = size - 1
             var target = Data.stats.getTarget(m, d)
+            var date = Data.stats.getStringTime(m, d)
 
-            var date = Data.stats.getTime(args[0]!!, args[1], args[2])
             headline.text = date[0][index]
             if (m == null) {
                 left.visibility = View.GONE; right.visibility = View.GONE
@@ -147,19 +180,16 @@ class Stat: AppCompatActivity() {
             progressValue.text = "Прогрес: " + round(percent * 100) + " %"
             averageAndMax.text = "Максимум кроків: " + maxValue.toInt().toString() + ".\nСередня кількість: " + round(value / size.toFloat()) + "."
 
-            diagramsBack.text = "Назад"
-            diagramsBack.setOnClickListener(Listener())
-
             if(maxValue == 0f){ maxValue = 1f }
 
-            do {
+            do{
                 var view = diagram.getChildAt(count)
                 var constraintLayout = findViewById<ConstraintLayout>(buttons.getChildAt(count).id)
 
                 var progressView = constraintLayout.getChildAt(1)
                 var button = findViewById<TextView>(constraintLayout.getChildAt(0).id)
 
-                if (args[index]!! > -1) {
+                if (skipedCount == 0 && args[index]!! > -1) {
                     value = (diagram.layoutParams.height * (Data.stats.getCount(args[0], args[1], args[2]) / maxValue)).toInt()
                     if (value != 0) {
                         view.layoutParams.height = value
@@ -174,7 +204,7 @@ class Stat: AppCompatActivity() {
 
                     } else { progressView.visibility = View.INVISIBLE }
 
-                    button.text = Data.stats.getTime(args[0], args[1], args[2])[1][index] + " — " + Data.stats.getCount(args[0]!!, args[1], args[2]).toString()
+                    button.text = Data.stats.getStringTime(args[0], args[1], args[2])[1][index] + " — " + Data.stats.getCount(args[0]!!, args[1], args[2]).toString()
                     if(index != 2){ constraintLayout.setOnClickListener(Listener(arrayListOf(args[0], args[1]))) } else{ constraintLayout.setOnClickListener{} }
 
                     if(constraintLayout.visibility == Button.GONE) {constraintLayout.visibility = ConstraintLayout.VISIBLE }
@@ -183,7 +213,7 @@ class Stat: AppCompatActivity() {
                 }
 
                 if (maxSize-- > 0) {
-                    if (args[index] != -2) {
+                    if (skipedCount == 0 && args[index] != -2) {
                         var color = getRandomColor()
 
                         view.setBackgroundColor(Color.parseColor(color))
@@ -196,36 +226,22 @@ class Stat: AppCompatActivity() {
                 } else {
                     view.visibility = View.GONE; constraintLayout.visibility = View.GONE
                 }
+
+                if(skipedCount != 0){ skipedCount -= 1 }
             } while (--count != -1)
         }
     }
-
-    fun getExtra(name: String): Int?{
-        var extra = intent.getIntExtra(name, -1)
-        if(extra == -1){ return null } else{ return extra }
-    }
 }
 
-class Listener(var args: ArrayList<Int?>? = null, var index: Int? = null, var add: Int? = null): View.OnClickListener{
+class Listener(var args: ArrayList<Int?>, var index: Int? = null, var add: Int? = null): View.OnClickListener{
     override fun onClick(p0: View?) {
         with(Data.stat!!){
-            if(args == null){
-                if(!back()){
-                    finish()
-                    return
-                }
-                else{
-                    start()
-                }
+            if(index  != null){
+                index = index!! - 1
+                args!![index!!] = args!![index!!]!! + add!!
             }
-            else{
-                if(index  != null){
-                    index = index!! - 1
-                    args!![index!!] = args!![index!!]!! + add!!
-                }
 
-                start(args!![0], args!![1])
-            }
+            start(args!![0], args!![1])
         }
     }
 }

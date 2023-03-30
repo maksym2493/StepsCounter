@@ -173,10 +173,27 @@ data class Stats(var path: File){
     fun get_notification_intent(m: Int, d: Int? = null): Intent{
         var intent = Intent(Data.stepCounter, Stat::class.java)
 
-        intent.putExtra("m", m)
-        if(d != null){ intent.putExtra("d", d) }
+        intent.putExtra("eventTime", getLongTime(m, d))
+        if(d == null){ intent.putExtra("d", false) }
 
         return intent
+    }
+
+    fun getByTime(t: Long): Array<Int>{
+        val delta = (time!! - t)
+        var args = arrayOf(
+            0,
+            (delta / (3600L * 24 * 1000)).toInt(),
+            count!! - (delta % (3600L * 24 * 1000)).toInt()
+        )
+
+        do{
+            if(args[1] >= stats[args[0]].getSize()){ args[1] -= stats[args[0]++].getSize() } else{ break }
+        } while(args[0] != stats.size)
+
+        if(args[0] == stats.size){ args[0] = 0; args[1] = 0; args[2] = 0 }
+
+        return args
     }
 
     fun add(c: Int){ stats[0].add(c); write() }
@@ -187,7 +204,7 @@ data class Stats(var path: File){
     fun getMaxSize(m: Int? = null, d: Int? = null): Int{
         if(d != null){ return 24 }
         if(m == null){ return 12 }
-        if(m != 0){ return getSize(m) }
+        if(m != 0){ return Date(getLongTime(m, d)).toString().split(" ")[2].toInt() }
 
         var date = Date().toString().split(" ")
 
@@ -203,23 +220,40 @@ data class Stats(var path: File){
     fun getTarget(m: Int? = null, d: Int? = null, h: Int? = null): Float{
         if(h != null){ return target!! / 24f }
         if(d != null){ return target!!.toFloat() }
-        if(m != null){ return (getMaxSize(m) * target!!).toFloat() }
+        if(m != null){
+            var size = getSize(m)
+            if(m != 0){ return (size * target!!).toFloat() }
+            return ((getMaxSize(m) - getSkipedCount(m, size = size)) * target!!).toFloat()
+        }
 
         return (365 * target!!).toFloat()
     }
 
-    fun getTime(m: Int? = null, d: Int? = null, h: Int? = null): Array<Array<String>>{
+    fun getSkipedCount(m: Int? = null, d: Int? = null, size: Int? = null): Int{
+        var date = Date(getLongTime(m, d)).toString().split(" ")
+
+        var day = date[2].toInt()
+        var hour = date[3].split(":")[0].toInt()
+
+        return if(m != null){ if(d != null){ hour } else{ day } - if(size != null){ size } else{ getSize(m, d) } } else{ 0 }
+    }
+
+    fun getLongTime(m: Int? = null, d: Int? = null, h: Int? = null): Long{
         var m = m
         var d = d
         var t = time!!
 
-        if((m != null && m != 0) || (m != null && m == 0 && d != 0)){ t -= (count!! + if(h != null){ 1 } else{ 1 }) * 3600 * 1000 }
+        if((m != null && m != 0) || (m != null && m == 0 && d != 0)){ t -= (count!! + if(h != null){ 1 } else{ 0 }) * 3600 * 1000 }
 
         if(h != null){ t -= h * 3600 * 1000; if(m == 0){ d = d!! - 1 } }
         if(d != null && d > 0){ t -= d * 3600 * 24 * 1000L }
         if(m != null){ while(m != 0){ t -= stats[m - 1].getSize() * 3600 * 24 * 1000L; m -= 1 } }
 
-        var date = Date(t).toString().substring(0, 13).split(" ")
+        return t
+    }
+
+    fun getStringTime(m: Int? = null, d: Int? = null, h: Int? = null): Array<Array<String>>{
+        var date = Date(getLongTime(m, d, h)).toString().substring(0, 13).split(" ")
         return arrayOf(arrayOf("Monthes", date[1], date[1] + " " + date[2] + "-е"), arrayOf(date[1], date[2] + "-е", date[3] + ":00"))
     }
 

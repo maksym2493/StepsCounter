@@ -1,6 +1,9 @@
 package com.example.stepcounterwef
 
-import android.app.*
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.hardware.Sensor
@@ -10,8 +13,6 @@ import android.hardware.SensorManager
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.example.stepcounterwef.Tools.Companion.notify
 import com.example.stepcounterwef.Tools.Companion.pow
@@ -20,7 +21,7 @@ import com.example.stepcounterwef.Tools.Companion.round
 import java.io.File
 import java.util.*
 
-class StepCounter: Service(), SensorEventListener{
+class StepCounter: Service(), SensorEventListener {
     private var active = false
     private var progress: Int? = null
     private var stepsCountCur: Int? = null
@@ -41,10 +42,13 @@ class StepCounter: Service(), SensorEventListener{
         read()
         createNotification()
 
-        handler = Handler(Looper.getMainLooper())
+        startForeground(1, notification.build())
+
+        handler = Handler()
         runnable = object: Runnable{
             override fun run() {
                 Data.stats.cheackUpdate()
+                notify("Debug", "Test", Date().toString())
                 handler.postDelayed(this, getDelay())
             }
         }
@@ -53,8 +57,6 @@ class StepCounter: Service(), SensorEventListener{
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
-
-        startForeground(1, notification.build())
 
         super.onCreate()
     }
@@ -89,12 +91,13 @@ class StepCounter: Service(), SensorEventListener{
             manager.createNotificationChannel(channel)
         }
 
-
+        var intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
 
         notification = NotificationCompat.Builder(this, "DailyTarget")
             .setContentTitle("Денна ціль")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentIntent(PendingIntent.getActivity(this, 0, Intent(this, MainActivity::class.java), 0))
+            .setContentIntent(PendingIntent.getActivity(this, 1, intent, 0))
 
         updateNotification()
     }

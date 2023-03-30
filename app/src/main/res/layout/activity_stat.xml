@@ -7,20 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".Stat">
 
-    <TextView
-        android:id="@+id/diagramsBack"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:padding="10dp"
-        android:text="TextView"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/diagram"
         android:layout_width="0dp"
@@ -360,12 +346,11 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:fillViewport="true"
-        app:layout_constraintBottom_toTopOf="@+id/diagramsBack"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toBottomOf="@+id/progressBar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/buttons"

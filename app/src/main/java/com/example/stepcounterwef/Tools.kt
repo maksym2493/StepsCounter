@@ -3,7 +3,6 @@ package com.example.stepcounterwef
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
@@ -63,12 +62,14 @@ class Tools{
                 manager.createNotificationChannel(channel)
             }
 
+            intent.putExtra("notificationId", notificationId)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
 
             var notification = NotificationCompat.Builder(Data.stepCounter!!, name)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentIntent(PendingIntent.getActivity(Data.stepCounter, 0, intent, 0))
+                .setContentIntent(PendingIntent.getActivity(Data.stepCounter, notificationId, intent, PendingIntent.FLAG_UPDATE_CURRENT))
                 .build()
 
             manager.notify(notificationId, notification)
