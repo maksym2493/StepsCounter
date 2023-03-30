@@ -10,7 +10,21 @@ import java.util.*
 
 class Tools{
     companion object{
-        var notificationId = 2
+        var notificationId = 3
+        val monthes = arrayOf(
+            arrayOf("Jan", "Січень"),
+            arrayOf("Feb", "Лютий"),
+            arrayOf("Mar", "Березень"),
+            arrayOf("Apr", "Квітень"),
+            arrayOf("May", "Травень"),
+            arrayOf("Jun", "Червень"),
+            arrayOf("Jul", "Липень"),
+            arrayOf("Aug", "Серпень"),
+            arrayOf("Sep", "Вересень"),
+            arrayOf("Oct", "Жовтень"),
+            arrayOf("Nov", "Листопад"),
+            arrayOf("Dec", "Грудень")
+        )
 
         fun getRandomColor(): String{
             var color = "#"
@@ -49,12 +63,12 @@ class Tools{
             return ((x.toInt() + add) / y).toString()
         }
 
-        fun notify(name: String, title: String, text: String, intent: Intent = Intent(Data.stepCounter, MainActivity::class.java)){
+        fun notify(id: String, name: String, title: String, text: String, intent: Intent = Intent(Data.stepCounter, MainActivity::class.java)){
             val manager = Data.stepCounter!!.getSystemService(NotificationManager::class.java)
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
                 val channel = NotificationChannel(
-                    name,
+                    id,
                     name,
                     NotificationManager.IMPORTANCE_DEFAULT
                 )
@@ -63,18 +77,23 @@ class Tools{
             }
 
             intent.putExtra("notificationId", notificationId)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
-            var notification = NotificationCompat.Builder(Data.stepCounter!!, name)
+            var notification = NotificationCompat.Builder(Data.stepCounter!!, id)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentIntent(PendingIntent.getActivity(Data.stepCounter, notificationId, intent, PendingIntent.FLAG_UPDATE_CURRENT))
+                .setContentIntent(PendingIntent.getActivity(Data.stepCounter, notificationId, intent, PendingIntent.FLAG_IMMUTABLE))
                 .build()
 
             manager.notify(notificationId, notification)
 
             notificationId += 1
+        }
+
+        fun getMonth(name: String): String{
+            for(month in monthes){ if(month[0] == name){ return month[1] } }
+            return ""
         }
     }
 }

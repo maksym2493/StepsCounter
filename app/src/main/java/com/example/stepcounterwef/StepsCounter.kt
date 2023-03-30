@@ -13,15 +13,19 @@ import android.hardware.SensorManager
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import androidx.core.app.NotificationCompat
 import com.example.stepcounterwef.Tools.Companion.notify
 import com.example.stepcounterwef.Tools.Companion.pow
 import com.example.stepcounterwef.Tools.Companion.rewriteDigit
 import com.example.stepcounterwef.Tools.Companion.round
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 import java.util.*
 
-class StepCounter: Service(), SensorEventListener {
+class StepCounter: Service(), SensorEventListener{
     private var active = false
     private var progress: Int? = null
     private var stepsCountCur: Int? = null
@@ -41,14 +45,14 @@ class StepCounter: Service(), SensorEventListener {
 
         read()
         createNotification()
-
         startForeground(1, notification.build())
 
-        handler = Handler()
+        handler = Handler(Looper.getMainLooper())
         runnable = object: Runnable{
             override fun run() {
-                Data.stats.cheackUpdate()
-                notify("Debug", "Test", Date().toString())
+                CoroutineScope(Dispatchers.IO).launch { Data.stats.checkUpdate() }
+                notify("Debug", "Debug", "Working...", Date().toString())
+
                 handler.postDelayed(this, getDelay())
             }
         }
@@ -70,7 +74,6 @@ class StepCounter: Service(), SensorEventListener {
     override fun onDestroy() {
         active = false
         Data.stepCounter = null
-        handler.removeCallbacks(runnable)
         sensorManager.unregisterListener(this, stepCounterSensor)
         super.onDestroy()
     }
@@ -83,7 +86,7 @@ class StepCounter: Service(), SensorEventListener {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             val channel = NotificationChannel(
                 "DailyTarget",
-                "DailyTarget",
+                "Денна ціль",
                 NotificationManager.IMPORTANCE_DEFAULT
             )
 
@@ -97,7 +100,7 @@ class StepCounter: Service(), SensorEventListener {
         notification = NotificationCompat.Builder(this, "DailyTarget")
             .setContentTitle("Денна ціль")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentIntent(PendingIntent.getActivity(this, 1, intent, 0))
+            .setContentIntent(PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_IMMUTABLE))
 
         updateNotification()
     }
@@ -109,8 +112,8 @@ class StepCounter: Service(), SensorEventListener {
         var percent = (count / target) * 100
         if(progress == null){ progress = (percent / 25).toInt() + 1 } else{
             if(progress != 5 && percent >= progress!! * 25){
-                if(progress != 4){ notify("ProgressNotifications", "Нова мітка!", "Пройдено " + (progress!! * 25).toString() + "% денної цілі!") } else{
-                    notify("ProgressNotifications", "Нова мітка!", "Досягнена денна ціль!")
+                if(progress != 4){ notify("ProgressNotifications", "Денний прогрес", "Нова мітка!", "Пройдено " + (progress!! * 25).toString() + "% денної цілі!") } else{
+                    notify("ProgressNotifications", "Денний прогрес", "Нова мітка!", "Досягнена денна ціль!")
                 }
 
                 progress = progress!! + 1

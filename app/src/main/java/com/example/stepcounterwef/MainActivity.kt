@@ -39,7 +39,7 @@ class MainActivity: AppCompatActivity(){
         Data.init(filesDir)
 
         start()
-        cheackActivityRecognitionPermittion()
+        try{ cheackActivityRecognitionPermittion() } catch(e: Exception){ Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show() }
     }
 
     fun cheackActivityRecognitionPermittion(){
@@ -57,18 +57,19 @@ class MainActivity: AppCompatActivity(){
         } else{
             if(gettingPermissions){ gettingPermissions = false }
 
+            startServices()
             cheackBateryOptimization()
-            startService(Intent(this, StepCounter::class.java))
         }
     }
 
     fun cheackBateryOptimization(){
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+
         if(!powerManager.isIgnoringBatteryOptimizations(packageName)){
             gettingPermissions = true
             editAlert(
                 "Battery Optimization",
-                "Для того, щоб додаток запускався автоматично після кожного запуску телефону, необхідно надати дозвіл на ігнорування оптимізації батереї.",
+                "Для роботи додатка в фоновому режимі необхідний на ігнорування оптимізації батареї.\n\nПісля надання дозволу відкриється вікно, де можна перейти на вкладку контролю запусками. Перевірте, чи виключене автоматичне керування запуском цього додатку.",
                 "Надати",
                 {
                     hideAlert()
@@ -76,12 +77,23 @@ class MainActivity: AppCompatActivity(){
 
                     val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
                     intent.data = Uri.parse("package:$packageName")
-                    startActivity(intent)
+                    startActivityForResult(intent, 1)
                 },
-                "Відмовитися",
+                "Пізніше",
                 { gettingPermissions = false; hideAlert() }
             )
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+
+        if(powerManager.isIgnoringBatteryOptimizations(packageName)){
+            intent = Intent(Intent.ACTION_POWER_USAGE_SUMMARY)
+            startActivity(intent)
+        }
+
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray){
@@ -124,8 +136,12 @@ class MainActivity: AppCompatActivity(){
         }
     }
 
+    fun startServices(){
+        startService(Intent(this, StepCounter::class.java))
+    }
+
     fun start(){
-        Data.stats.cheackUpdate()
+        Data.stats.checkUpdate()
         binding = ActivityMainBinding.inflate(layoutInflater)
         windowSize = (windowManager.defaultDisplay.width - 20 * binding.diagram.layoutParams.height / 200f).toInt()
 

@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.stepcounterwef.Tools.Companion.getRandomColor
@@ -31,8 +30,6 @@ class Stat: AppCompatActivity() {
     }
 
     fun removeNotification(){
-        if(Data.stat != null){ Data.stat!!.finish() }
-
         val notificationId = intent.getIntExtra("notificationId", 0)
         if(notificationId != 0){
             val notificationManager = getSystemService(NotificationManager::class.java)
@@ -53,7 +50,6 @@ class Stat: AppCompatActivity() {
 
     override fun onResume() {
         active = true
-        if(Data.main == null){ removeNotification() }
 
         start()
         super.onResume()
@@ -91,7 +87,7 @@ class Stat: AppCompatActivity() {
 
         m = lM
         d = lD
-        Data.stats.cheackUpdate()
+        Data.stats.checkUpdate()
 
         var args = arrayOf(m, d, null)
         var index = if (d != null) {
@@ -112,8 +108,6 @@ class Stat: AppCompatActivity() {
         } else {
             Data.stats.getSize()
         } - 1
-
-        Toast.makeText(this, skipedCount.toString(), Toast.LENGTH_SHORT).show()
 
         with(binding) {
             var screenWidth = (windowManager.defaultDisplay.width - 20 * diagram.layoutParams.height / 200f).toInt()

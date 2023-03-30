@@ -26,7 +26,7 @@ class Level(var path: File){
         exp = exp!! + count
         while(exp!! >= totalExp!!){
             lvl = lvl!! + 1; exp = exp!! - totalExp!!; totalExp = totalExp!! + 100
-            notify("NewLevel", "Новий рівень!", "Тепер у Вас " + lvl.toString() + "-й рівень!")
+            notify("NewLevel", "Новий рівень", "Новий рівень!", "Тепер у Вас " + lvl.toString() + "-й рівень!")
         }
 
         write()

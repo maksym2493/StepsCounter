@@ -1,6 +1,7 @@
 package com.example.stepcounterwef
 
 import android.content.Intent
+import com.example.stepcounterwef.Tools.Companion.getMonth
 import com.example.stepcounterwef.Tools.Companion.notify
 import com.example.stepcounterwef.Tools.Companion.pow
 import com.example.stepcounterwef.Tools.Companion.rewriteDigit
@@ -105,7 +106,7 @@ data class Stats(var path: File){
         }
     }
 
-    fun cheackUpdate(){
+    fun checkUpdate(){
         var update_stats = false
         var curTime = Date().time
 
@@ -124,6 +125,7 @@ data class Stats(var path: File){
 
                     notify(
                         "NewDay",
+                        "Звіт за день",
                         get_notification_title(),
                         get_notification_text(1, 0),
                         get_notification_intent(1, 0)
@@ -131,6 +133,7 @@ data class Stats(var path: File){
 
                     notify(
                         "NewMonth",
+                        "Звіт за місяць",
                         get_notification_title(1),
                         get_notification_text(1),
                         get_notification_intent(1)
@@ -140,6 +143,7 @@ data class Stats(var path: File){
 
                     notify(
                         "NewDay",
+                        "Звіт за день",
                         get_notification_title(),
                         get_notification_text(0, 1),
                         get_notification_intent(0, 1)
@@ -154,7 +158,7 @@ data class Stats(var path: File){
     fun get_notification_title(type: Int = 0): String{
         var res = "Звіт за "
         var date = Date(time!! - 1000).toString().split(" ")
-        if(type == 0){ res += date[2] + "-е" } else{ res += date[1] }
+        if(type == 0){ res += date[2] + "-е" } else{ res += getMonth(date[1]) }
 
         return res
     }
@@ -230,12 +234,10 @@ data class Stats(var path: File){
     }
 
     fun getSkipedCount(m: Int? = null, d: Int? = null, size: Int? = null): Int{
-        var date = Date(getLongTime(m, d)).toString().split(" ")
+        var day = Date(getLongTime(m, d)).toString().split(" ")[2].toInt()
+        var hour = Date().toString().split(" ")[3].split(":")[0].toInt() + 1
 
-        var day = date[2].toInt()
-        var hour = date[3].split(":")[0].toInt()
-
-        return if(m != null){ if(d != null){ hour } else{ day } - if(size != null){ size } else{ getSize(m, d) } } else{ 0 }
+        return if(m != null){ if(d != null){ if(m == 0 && d == 0){ hour } else{ 24 } } else{ day } - if(size != null){ size } else{ getSize(m, d) } } else{ 0 }
     }
 
     fun getLongTime(m: Int? = null, d: Int? = null, h: Int? = null): Long{
@@ -254,7 +256,7 @@ data class Stats(var path: File){
 
     fun getStringTime(m: Int? = null, d: Int? = null, h: Int? = null): Array<Array<String>>{
         var date = Date(getLongTime(m, d, h)).toString().substring(0, 13).split(" ")
-        return arrayOf(arrayOf("Monthes", date[1], date[1] + " " + date[2] + "-е"), arrayOf(date[1], date[2] + "-е", date[3] + ":00"))
+        return arrayOf(arrayOf("Місяці", getMonth(date[1]), getMonth(date[1]) + " " + date[2] + "-е"), arrayOf(getMonth(date[1]), date[2] + "-е", date[3] + ":00"))
     }
 
     fun write(){
