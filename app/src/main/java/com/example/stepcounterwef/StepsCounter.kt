@@ -11,7 +11,6 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Build
-import android.os.Handler
 import android.os.IBinder
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
@@ -20,13 +19,11 @@ import com.example.stepcounterwef.Tools.Companion.notify
 import com.example.stepcounterwef.Tools.Companion.pow
 import com.example.stepcounterwef.Tools.Companion.rewriteDigit
 import com.example.stepcounterwef.Tools.Companion.round
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.io.File
+import java.lang.Thread.sleep
 import java.util.*
 
-class StepCounter: Service(), SensorEventListener{
+class StepCounter: Service(), SensorEventListener, Runnable{
     private var active = false
     private var progress: Int? = null
     private var stepsCountCur: Int? = null
@@ -38,9 +35,6 @@ class StepCounter: Service(), SensorEventListener{
     lateinit private var stepCounterSensor: Sensor
     lateinit private var sensorManager: SensorManager
 
-    lateinit private var handler: Handler
-    lateinit private var runnable: Runnable
-
     lateinit private var wakeLock: WakeLock
 
     override fun onCreate() {
@@ -49,18 +43,6 @@ class StepCounter: Service(), SensorEventListener{
         Data.stepCounter = this
 
         read()
-
-        handler = Handler()
-        runnable = object: Runnable{
-            override fun run() {
-                CoroutineScope(Dispatchers.IO).launch{ Data.stats.checkUpdate() }
-
-                var file = File("/storage/emulated/0", "log.txt")
-                file.writeText(Date().toString() + "\n" + file.readText())
-
-                handler.postDelayed(this, getDelay())
-            }
-        }
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
@@ -73,8 +55,22 @@ class StepCounter: Service(), SensorEventListener{
         startForeground(1, notification.build())
     }
 
+    override fun run(){
+        while(active){
+            if(Data.stats.checkUpdate()){
+                updateNotification()
+                startForeground(1, notification.build())
+            }
+
+            notify("Debug", "Debug", "Working...", Date().toString())
+
+            var endTime = System.currentTimeMillis() + getDelay()
+            while(endTime > System.currentTimeMillis() && active){ sleep(1000) }
+        }
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if(!active){ active = true; handler.postDelayed(runnable, getDelay()); sensorManager.registerListener(this, stepCounterSensor, SensorManager.SENSOR_DELAY_NORMAL) }
+        if(!active){ active = true; Thread(this).start(); sensorManager.registerListener(this, stepCounterSensor, SensorManager.SENSOR_DELAY_NORMAL) }
 
         return START_STICKY
     }
@@ -82,7 +78,6 @@ class StepCounter: Service(), SensorEventListener{
     override fun onDestroy() {
         active = false
         Data.stepCounter = null
-        handler.removeCallbacks(runnable)
         sensorManager.unregisterListener(this, stepCounterSensor)
 
         wakeLock.release()
@@ -99,7 +94,7 @@ class StepCounter: Service(), SensorEventListener{
             val channel = NotificationChannel(
                 "DailyTarget",
                 "Денна ціль",
-                NotificationManager.IMPORTANCE_HIGH
+                NotificationManager.IMPORTANCE_DEFAULT
             )
 
             val manager = getSystemService(NotificationManager::class.java)
@@ -112,7 +107,6 @@ class StepCounter: Service(), SensorEventListener{
         notification = NotificationCompat.Builder(this, "DailyTarget")
             .setContentTitle("Денна ціль")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setPriority(NotificationManager.IMPORTANCE_HIGH)
             .setContentIntent(PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_IMMUTABLE))
 
         updateNotification()

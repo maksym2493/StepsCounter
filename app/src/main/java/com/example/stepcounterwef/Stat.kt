@@ -9,7 +9,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.stepcounterwef.Tools.Companion.getRandomColor
+import com.example.stepcounterwef.Tools.Companion.rewriteDigit
 import com.example.stepcounterwef.Tools.Companion.round
+import com.example.stepcounterwef.Tools.Companion.setBackground
 import com.example.stepcounterwef.Tools.Companion.updateView
 import com.example.stepcounterwef.databinding.ActivityStatBinding
 
@@ -102,6 +104,8 @@ class Stat: AppCompatActivity() {
         with(binding) {
             var screenWidth = (windowManager.defaultDisplay.width - 20 * diagram.layoutParams.height / 200f).toInt()
 
+            if(backgroundImage.drawable == null){ setBackground(backgroundImage) }
+
             var i = 0
             var count = 31
             var maxValue = 0f
@@ -165,7 +169,7 @@ class Stat: AppCompatActivity() {
             } else{ progressBar.visibility = View.INVISIBLE }
 
             progressValue.text = "Прогрес: " + round(percent * 100) + " %"
-            averageAndMax.text = "Максимум кроків: " + maxValue.toInt().toString() + ".\nСередня кількість: " + round(value / size.toFloat()) + "."
+            averageAndMax.text = "Максимум кроків: " + rewriteDigit(maxValue.toInt()) + ".\nСередня кількість: " + round(value / size.toFloat()) + "."
 
             if(maxValue == 0f){ maxValue = 1f }
 
@@ -195,7 +199,7 @@ class Stat: AppCompatActivity() {
 
                     } else { progressView.visibility = View.INVISIBLE }
 
-                    button.text = Data.stats.getStringTime(args[0], args[1], args[2])[1][index] + " — " + Data.stats.getCount(args[0]!!, args[1], args[2]).toString()
+                    button.text = Data.stats.getStringTime(args[0], args[1], args[2])[1][index] + " — " + rewriteDigit(Data.stats.getCount(args[0]!!, args[1], args[2]))
                     if(index != 2){ constraintLayout.setOnClickListener(Listener(arrayListOf(args[0], args[1]))) } else{ constraintLayout.setOnClickListener{} }
 
                     if(constraintLayout.visibility == Button.GONE) {constraintLayout.visibility = ConstraintLayout.VISIBLE }
@@ -229,10 +233,10 @@ class Listener(var args: ArrayList<Int?>, var index: Int? = null, var add: Int? 
         with(Data.stat!!){
             if(index  != null){
                 index = index!! - 1
-                args!![index!!] = args!![index!!]!! + add!!
+                args[index!!] = args[index!!]!! + add!!
             }
 
-            start(args!![0], args!![1])
+            start(args[0], args[1])
         }
     }
 }

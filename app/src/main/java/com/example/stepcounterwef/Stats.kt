@@ -106,7 +106,8 @@ data class Stats(var path: File){
         }
     }
 
-    fun checkUpdate(){
+    fun checkUpdate(): Boolean{
+        var newDay = false
         var update_stats = false
         var curTime = Date().time
 
@@ -117,6 +118,7 @@ data class Stats(var path: File){
 
             if(count!! == 24){
                 count = 0
+                if(!newDay){ newDay = true }
 
                 if(Date(time!!).toString().split(" ")[2] == "01"){
                     if(stats.size == 12){ stats.removeAt(11) }
@@ -153,6 +155,8 @@ data class Stats(var path: File){
         }
 
         if(update_stats){ write() }
+
+        return newDay
     }
 
     fun get_notification_title(type: Int = 0): String{

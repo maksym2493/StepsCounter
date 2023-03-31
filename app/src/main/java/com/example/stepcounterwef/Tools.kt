@@ -4,9 +4,13 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.View
+import android.widget.ImageView
 import androidx.core.app.NotificationCompat
+import java.io.File
+import java.io.FileInputStream
 import java.util.*
 
 class Tools{
@@ -61,7 +65,8 @@ class Tools{
             var add = 0
             (x - x.toInt()).toString().substring(2).forEach{ if(it != '4'){ return@forEach }; if(it == '5'){ add = 1; return@forEach } }
 
-            return ((x.toInt() + add) / y).toString()
+            x = (x.toInt() + add) / y
+            return rewriteDigit(x.toInt()) + "." + ((x - x.toInt()) * y).toInt().toString()
         }
 
         fun notify(id: String, name: String, title: String, text: String, intent: Intent = Intent(Data.stepCounter, MainActivity::class.java)){
@@ -117,5 +122,16 @@ class Tools{
             for(month in monthes){ if(month[0] == name){ return month[1] } }
             return ""
         }
+
+        fun getBackground(){
+            var file = File(Data.path, "Data/background")
+            if(file.exists()){
+                var inputStream = FileInputStream(file)
+                Data.backgroundImage = Drawable.createFromStream(inputStream,null)
+            } else{ Data.backgroundImage = null }
+        }
+
+        fun setBackground(backgroundImage: ImageView){ backgroundImage.setImageDrawable(Data.backgroundImage) }
+        fun removeBackground(backgroundImage: ImageView){ File(Data.path, "Data/background").delete(); getBackground(); setBackground(backgroundImage) }
     }
 }

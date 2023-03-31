@@ -1,5 +1,6 @@
 package com.example.stepcounterwef
 
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -7,6 +8,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.PowerManager
+import android.provider.MediaStore
 import android.provider.Settings
 import android.view.View
 import android.view.View.OnClickListener
@@ -15,12 +17,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.stepcounterwef.Tools.Companion.getBackground
 import com.example.stepcounterwef.Tools.Companion.getRandomColor
+import com.example.stepcounterwef.Tools.Companion.removeBackground
 import com.example.stepcounterwef.Tools.Companion.removeNotification
 import com.example.stepcounterwef.Tools.Companion.rewriteDigit
 import com.example.stepcounterwef.Tools.Companion.round
+import com.example.stepcounterwef.Tools.Companion.setBackground
 import com.example.stepcounterwef.Tools.Companion.updateView
 import com.example.stepcounterwef.databinding.ActivityMainBinding
+import java.io.File
+import java.io.FileOutputStream
 
 class MainActivity: AppCompatActivity(){
     private var active = true
@@ -65,6 +72,26 @@ class MainActivity: AppCompatActivity(){
         } else{
             if(gettingPermissions){ gettingPermissions = false }
 
+            checkNotificationPermission()
+        }
+    }
+
+    fun checkNotificationPermission(){
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if(!notificationManager.areNotificationsEnabled()){
+            editAlert(
+                "Notification Permission",
+                "Для роботи додатка в фоні необхідно надати йому дозвіл на відправку сповіщень.",
+                "Надати",
+                {
+                    hideAlert()
+
+                    val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                    intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+                    startActivityForResult(intent, 3)
+                }
+            )
+        } else{
             startServices()
             cheackBateryOptimization()
         }
@@ -94,14 +121,54 @@ class MainActivity: AppCompatActivity(){
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
-        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        if(requestCode == 1){
+            val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
 
-        if(powerManager.isIgnoringBatteryOptimizations(packageName)){
-            intent = Intent(Intent.ACTION_POWER_USAGE_SUMMARY)
-            startActivity(intent)
+            if(powerManager.isIgnoringBatteryOptimizations(packageName)){
+                intent = Intent(Intent.ACTION_POWER_USAGE_SUMMARY)
+                startActivity(intent)
+            }
+        } else{
+            if(requestCode == 2){
+                if(resultCode == RESULT_OK){
+                    try {
+                        var inputStream = contentResolver.openInputStream(data!!.data!!)
+                        val outputStream = FileOutputStream(File(filesDir, "Data/background"))
+
+                        inputStream?.use{input ->
+                            outputStream.use{output ->
+                                input.copyTo(output)
+                            }
+                        }
+
+                        getBackground()
+                        setBackground(binding.backgroundImage)
+                        Toast.makeText(this, "Фон оновлений!", Toast.LENGTH_SHORT).show()
+
+                    } catch(e: Exception){ Toast.makeText(this, "Помилка!\n" + e.toString(), Toast.LENGTH_SHORT).show() }
+                } else{
+                    var text = "Встановлення фону скасоване."
+                    if(binding.backgroundImage.drawable != null){ text = "Поточний фон видалений."; removeBackground(binding.backgroundImage) }
+                    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+                }
+            } else{
+                if(requestCode == 3){ checkNotificationPermission() }
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    fun getPath(uri: Uri): String{
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = contentResolver.query(uri, projection, null, null, null)
+        var columnIndex = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+
+        cursor!!.moveToFirst()
+        val filePath = cursor!!.getString(columnIndex)
+
+        cursor.close()
+        return filePath
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray){
@@ -155,6 +222,8 @@ class MainActivity: AppCompatActivity(){
             var expLevel = Data.lvl.get_exp()
             var progress = expLevel[0] / expLevel[1].toFloat()
 
+            if(backgroundImage.drawable == null){ setBackground(backgroundImage) }
+
             level.text = "Рівень: " +  rewriteDigit(Data.lvl.get_lvl())
             exp.text = rewriteDigit(expLevel[0]) + " з " + rewriteDigit(expLevel[1]) + " [ " + round(progress * 100) + " % ]"
 
@@ -164,8 +233,19 @@ class MainActivity: AppCompatActivity(){
             showTargets()
             drawDiagram()
 
-            showStatistic.setOnClickListener{
-                startActivity(Intent(this@MainActivity, Stat::class.java))
+            if(!showStatistic.hasOnClickListeners()){
+                showStatistic.setOnClickListener{
+                    startActivity(Intent(this@MainActivity, Stat::class.java))
+                }
+            }
+
+            if(!setBackgound.hasOnClickListeners()){
+                setBackgound.setOnClickListener{
+                    val intent = Intent(Intent.ACTION_GET_CONTENT)
+                    intent.type = "image/*"
+
+                    startActivityForResult(intent, 2)
+                }
             }
 
             if(!changeTarget.hasOnClickListeners()){
@@ -241,7 +321,7 @@ class MainActivity: AppCompatActivity(){
             var i = counts.size - 1
             do{ totalCount += counts[i]; if(counts[i] > maxValue){ maxValue = counts[i].toFloat() } } while(--i != -1)
 
-            averageAndMax.text = "Максимум кроків: " + maxValue.toInt().toString() + ".\nСередня кількість: " + round(totalCount / counts.size.toFloat()) + "."
+            averageAndMax.text = "Максимум кроків: " + rewriteDigit(maxValue.toInt()) + ".\nСередня кількість: " + round(totalCount / counts.size.toFloat()) + "."
 
             i = 0
             if(maxValue == 0f){ maxValue = 1f }
