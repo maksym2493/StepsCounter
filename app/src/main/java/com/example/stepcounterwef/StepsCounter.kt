@@ -110,21 +110,22 @@ class StepCounter: Service(), SensorEventListener, Runnable{
         updateNotification()
     }
 
-    fun updateNotification(newTarget: Boolean = false){
+    fun updateNotification(){
         val count = Data.stats.getCount(0, 0)
         val target = Data.stats.getTarget(0, 0)
         val percent = (count / target) * 100
 
-        checkProgress(percent, newTarget)
+        checkProgress(percent)
         notification.setContentText("Прогрес: " + rewriteDigit(count) + " з " + rewriteDigit(target.toInt()) + " [ " + round(percent) + "% ]")
 
         startForeground(1, notification.build())
     }
 
-    fun checkProgress(percent: Float, newTarget: Boolean = false){
+    fun checkProgress(percent: Float){
         var update = false
         if(progress == null){ progress = 1 }
-        if(newTarget){ val newProgress = (percent / 25).toInt() + 1; if(newProgress < progress!!){ progress = newProgress; update = true } }
+
+        val newProgress = (percent / 25).toInt() + 1; if(newProgress < progress!!){ progress = newProgress; update = true }
 
         while(progress != 5 && percent >= progress!! * 25){
             if(progress != 4){ notify("ProgressNotifications", "Денний прогрес", "Нова мітка!", "Пройдено " + (progress!! * 25).toString() + "% денної цілі!") } else{
