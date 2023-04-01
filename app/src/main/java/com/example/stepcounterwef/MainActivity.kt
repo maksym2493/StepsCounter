@@ -352,7 +352,7 @@ class MainActivity: AppCompatActivity(){
                                                         end = true
                                                         newTarget.setText("")
                                                         Data.stats.setTarget(target)
-                                                        Data.stepCounter!!.checkProgress((Data.stats.getCount(0, 0) / target.toFloat()) * 100, true)
+                                                        Data.stepCounter!!.updateNotification(true)
 
                                                         val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                                                         inputMethodManager.hideSoftInputFromWindow(window.decorView.windowToken, 0)
