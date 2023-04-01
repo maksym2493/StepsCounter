@@ -58,6 +58,8 @@ class StepCounter: Service(), SensorEventListener, Runnable{
     override fun run(){
         while(active){
             if(Data.stats.checkUpdate()){
+                progress = 1
+
                 updateNotification()
                 startForeground(1, notification.build())
             }
@@ -115,7 +117,11 @@ class StepCounter: Service(), SensorEventListener, Runnable{
         val count = Data.stats.getCount(0, 0)
         val target = Data.stats.getTarget(0, 0)
 
-        var percent = (count / target) * 100
+        cheackProgress((count / target) * 100)
+        notification.setContentText("Прогрес: " + rewriteDigit(count) + " з " + rewriteDigit(target.toInt()) + " [ " + round(percent) +"% ]")
+    }
+
+    fun cheackProgress(percent: Float){
         if(progress == null){ progress = (percent / 25).toInt() + 1 } else{
             while(progress != 5 && percent >= progress!! * 25){
                 if(progress != 4){ notify("ProgressNotifications", "Денний прогрес", "Нова мітка!", "Пройдено " + (progress!! * 25).toString() + "% денної цілі!") } else{
@@ -125,8 +131,6 @@ class StepCounter: Service(), SensorEventListener, Runnable{
                 progress = progress!! + 1
             }
         }
-
-        notification.setContentText("Прогрес: " + rewriteDigit(count) + " з " + rewriteDigit(target.toInt()) + " [ " + round(percent) +"% ]")
     }
 
     override fun onSensorChanged(event: SensorEvent) {
