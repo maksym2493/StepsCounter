@@ -13,6 +13,7 @@ import android.provider.MediaStore
 import android.provider.Settings
 import android.view.View
 import android.view.View.OnClickListener
+import android.view.inputmethod.InputMethodManager
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
@@ -351,7 +352,11 @@ class MainActivity: AppCompatActivity(){
                                                         end = true
                                                         newTarget.setText("")
                                                         Data.stats.setTarget(target)
-                                                        Data.stepCounter!!.checkProgress((Data.stats.getCount(0, 0) / target) * 100)
+                                                        Data.stepCounter!!.checkProgress((Data.stats.getCount(0, 0) / target.toFloat()) * 100, true)
+
+                                                        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                                                        inputMethodManager.hideSoftInputFromWindow(window.decorView.windowToken, 0)
+
                                                         Toast.makeText(this@MainActivity, "Встановлена ціль в " + rewriteDigit(target) + " кроків.", Toast.LENGTH_SHORT).show()
 
                                                         start()

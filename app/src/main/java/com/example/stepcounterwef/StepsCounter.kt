@@ -116,21 +116,26 @@ class StepCounter: Service(), SensorEventListener, Runnable{
     fun updateNotification(){
         val count = Data.stats.getCount(0, 0)
         val target = Data.stats.getTarget(0, 0)
+        val percent = (count / target) * 100
 
-        cheackProgress((count / target) * 100)
-        notification.setContentText("Прогрес: " + rewriteDigit(count) + " з " + rewriteDigit(target.toInt()) + " [ " + round(percent) +"% ]")
+        checkProgress(percent)
+        notification.setContentText("Прогрес: " + rewriteDigit(count) + " з " + rewriteDigit(target.toInt()) + " [ " + round(percent) + "% ]")
     }
 
-    fun cheackProgress(percent: Float){
-        if(progress == null){ progress = (percent / 25).toInt() + 1 } else{
-            while(progress != 5 && percent >= progress!! * 25){
-                if(progress != 4){ notify("ProgressNotifications", "Денний прогрес", "Нова мітка!", "Пройдено " + (progress!! * 25).toString() + "% денної цілі!") } else{
-                    notify("ProgressNotifications", "Денний прогрес", "Нова мітка!", "Досягнена денна ціль!")
-                }
+    fun checkProgress(percent: Float, newTarget: Boolean = false){
+        var update = false
+        if(progress == null){ progress = 1 }
+        if(newTarget){ val newProgress = (percent / 25).toInt() + 1; if(newProgress < progress!!){ progress = newProgress; update = true } }
 
-                progress = progress!! + 1
+        while(progress != 5 && percent >= progress!! * 25){
+            if(progress != 4){ notify("ProgressNotifications", "Денний прогрес", "Нова мітка!", "Пройдено " + (progress!! * 25).toString() + "% денної цілі!") } else{
+                notify("ProgressNotifications", "Денний прогрес", "Нова мітка!", "Досягнена денна ціль!")
             }
+
+            progress = progress!! + 1; if(!update){ update = true }
         }
+
+        if(update){ write() }
     }
 
     override fun onSensorChanged(event: SensorEvent) {
@@ -171,10 +176,11 @@ class StepCounter: Service(), SensorEventListener, Runnable{
 
             stepsCountCur = args[0].toInt()
             stepsCountPrev = args[1].toInt()
+            progress = args[2].toInt()
         }
     }
 
-    fun write(){ f.writeText(stepsCountCur.toString() + " " + stepsCountPrev.toString()) }
+    fun write(){ f.writeText(stepsCountCur.toString() + " " + stepsCountPrev.toString() + " " + progress.toString()) }
 
     fun getDelay(): Long{
         var i = 1

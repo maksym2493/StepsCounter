@@ -68,7 +68,7 @@ class Tools{
             (x - x.toInt()).toString().substring(2).forEach{ if(it.toInt() >= 5){ add = 1; return@forEach }; if(it != '4'){ return@forEach } }
 
             x = (x.toInt() + add) / y
-            return rewriteDigit(x.toInt()) + "." + ((x - x.toInt()) * y).toInt().toString().trimEnd("0").trimEnd(".")
+            return rewriteDigit(x.toInt()) + "." + ((x - x.toInt()) * y).toInt().toString().trimEnd('0').trimEnd('.')
         }
 
         fun notify(id: String, name: String, title: String, text: String, intent: Intent = Intent(Data.stepCounter, MainActivity::class.java)){
