@@ -53,6 +53,11 @@ class MainActivity: AppCompatActivity(){
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.root.setOnClickListener {
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(binding.root.windowToken, 0)
+        }
+
         windowSize = (windowManager.defaultDisplay.width - 20 * binding.diagram.layoutParams.height / 200f).toInt()
 
         active = true
@@ -61,7 +66,7 @@ class MainActivity: AppCompatActivity(){
 
         start()
         removeNotification(intent)
-        try{ cheackActivityRecognitionPermittion() } catch(e: Exception){ Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show() }
+        cheackActivityRecognitionPermittion()
     }
 
     fun cheackActivityRecognitionPermittion(){
@@ -353,9 +358,6 @@ class MainActivity: AppCompatActivity(){
                                                         newTarget.setText("")
                                                         Data.stats.setTarget(target)
                                                         Data.stepCounter!!.updateNotification()
-
-                                                        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                                                        inputMethodManager.hideSoftInputFromWindow(window.decorView.windowToken, 0)
 
                                                         Toast.makeText(this@MainActivity, "Встановлена ціль в " + rewriteDigit(target) + " кроків.", Toast.LENGTH_SHORT).show()
 
