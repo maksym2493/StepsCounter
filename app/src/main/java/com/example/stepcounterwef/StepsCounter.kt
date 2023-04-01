@@ -99,6 +99,7 @@ class StepCounter: Service(), SensorEventListener, Runnable{
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
 
         notification = NotificationCompat.Builder(this, "DailyTarget")
+            .setSound(null)
             .setOngoing(true)
             .setContentTitle("Денна ціль")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
