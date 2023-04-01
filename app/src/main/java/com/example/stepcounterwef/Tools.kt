@@ -4,10 +4,12 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.app.NotificationCompat
 import java.io.File
 import java.io.FileInputStream
@@ -121,6 +123,42 @@ class Tools{
         fun getMonth(name: String): String{
             for(month in monthes){ if(month[0] == name){ return month[1] } }
             return ""
+        }
+
+        fun getFontSettings(){
+            var file = File(Data.path, "Data/fontSettings")
+            if(file.exists()){
+                var args = file.readText().split(" ")
+                Data.fontSettings = arrayOf(args[0].toFloat(), args[1].toFloat())
+            } else{
+                var random = Random()
+                Data.fontSettings = arrayOf(
+                    Color.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255)).toFloat(),
+                    6f + 4 * random.nextInt(101) / 100
+                )
+
+                updateFontSettings()
+            }
+        }
+
+        fun setFontSettings(textView: TextView, type: Int = 0){
+            var context = if(Data.main != null){ Data.main!! } else{ Data.stat!! }
+
+            setShadow(textView)
+            textView.setTextColor(Data.fontSettings!![0].toInt())
+            textView.textSize = (Data.fontSettings!![1] + 2 * type) * context.resources.displayMetrics.scaledDensity
+        }
+
+        fun setShadow(textView: TextView, color: Int = Data.fontSettings!![0].toInt()){
+            textView.setShadowLayer(1f, 2f, 2f, getShadowColor(color))
+        }
+
+        fun getShadowColor(color: Int): Int{
+            if((0.2162 * ((color shr 16) and 0xff) + 0.7152 * ((color shr 8) and 0xff) + 0.0722 * (color and 0xff)) > 128){ return Color.BLACK } else{ return Color.WHITE }
+        }
+
+        fun updateFontSettings(){
+            File(Data.path, "Data/fontSettings").writeText(Data.fontSettings!![0].toString() + " " + Data.fontSettings!![1].toString())
         }
 
         fun getBackground(){

@@ -2,6 +2,7 @@ package com.example.stepcounterwef
 
 import android.graphics.drawable.Drawable
 import com.example.stepcounterwef.Tools.Companion.getBackground
+import com.example.stepcounterwef.Tools.Companion.getFontSettings
 import java.io.File
 
 class Data{
@@ -10,6 +11,7 @@ class Data{
         var main: MainActivity? = null
         var stepCounter: StepCounter? = null
         var backgroundImage: Drawable? = null
+        var fontSettings: Array<Float>? = null
 
         lateinit var lvl: Level
         lateinit var stats: Stats
@@ -24,7 +26,9 @@ class Data{
 
             lvl = Level(path)
             stats = Stats(path)
+
             getBackground()
+            getFontSettings()
         }
     }
 }

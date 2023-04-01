@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fontSizeTextView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -13,6 +14,162 @@
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fontSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/backgroundImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/cb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="B:"
+            app:layout_constraintBottom_toBottomOf="@+id/fontB"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/fontB" />
+
+        <SeekBar
+            android:id="@+id/fontG"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:max="255"
+            android:progressDrawable="@drawable/seekbar_tracker"
+            android:scrollIndicators="start"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cg"
+            app:layout_constraintTop_toBottomOf="@+id/fontR" />
+
+        <SeekBar
+            android:id="@+id/fontB"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:max="255"
+            android:progressDrawable="@drawable/seekbar_tracker"
+            android:scrollIndicators="start"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/cb"
+            app:layout_constraintTop_toBottomOf="@+id/fontG" />
+
+        <TextView
+            android:id="@+id/cg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="G:"
+            app:layout_constraintBottom_toBottomOf="@+id/fontG"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/fontG" />
+
+        <TextView
+            android:id="@+id/cr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="R:"
+            app:layout_constraintBottom_toBottomOf="@+id/fontR"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/fontR" />
+
+        <SeekBar
+            android:id="@+id/fontR"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:max="255"
+            android:progressDrawable="@drawable/seekbar_tracker"
+            android:scrollIndicators="start"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/cr"
+            app:layout_constraintTop_toBottomOf="@+id/tc" />
+
+        <SeekBar
+            android:id="@+id/fontSize"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="10dp"
+            android:max="40"
+            android:progressDrawable="@drawable/seekbar_tracker"
+            android:scrollIndicators="start"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/fs"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/fs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Розмір тексту:"
+            app:layout_constraintBottom_toBottomOf="@+id/fontSize"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Колір тексту"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fontSize" />
+
+        <TextView
+            android:id="@+id/exemple1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:text="Результат 1"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fontB" />
+
+        <TextView
+            android:id="@+id/exemple2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Результат 2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/exemple1" />
+
+        <Button
+            android:id="@+id/confirmFontSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Підтвердити"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/exemple2" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/requestPermission"
@@ -90,7 +247,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/changeTargetHeadline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Встановлення цілі"
@@ -111,7 +268,7 @@
             android:inputType="textPersonName"
             app:layout_constraintEnd_toStartOf="@+id/confirm"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/changeTargetHeadline" />
 
         <Button
             android:id="@+id/confirm"
@@ -137,6 +294,17 @@
             android:layout_height="match_parent"
             android:paddingBottom="10dp"
             tools:context=".MainActivity">
+
+            <Button
+                android:id="@+id/openFontSettings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="Встановити шрифт"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/setBackgound" />
 
             <View
                 android:id="@+id/totalProgress"
@@ -229,7 +397,7 @@
                 android:layout_marginTop="10dp"
                 android:text="Денна ціль"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+                app:layout_constraintTop_toBottomOf="@+id/targetsAndProgress" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/diagram"
@@ -489,7 +657,7 @@
                 android:layout_marginTop="10dp"
                 android:text="TextView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView5" />
+                app:layout_constraintTop_toBottomOf="@+id/statsFor24Hours" />
 
             <TextView
                 android:id="@+id/level"
@@ -523,7 +691,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/level" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/targetsAndProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -538,7 +706,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/exp" />
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/statsFor24Hours"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"

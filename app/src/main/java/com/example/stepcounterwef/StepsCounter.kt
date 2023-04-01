@@ -62,10 +62,8 @@ class StepCounter: Service(), SensorEventListener, Runnable{
                 startForeground(1, notification.build())
             }
 
-            notify("Debug", "Debug", "Working...", Date().toString())
-
             var endTime = System.currentTimeMillis() + getDelay()
-            while(endTime > System.currentTimeMillis() && active){ sleep(1000) }
+            while(endTime > System.currentTimeMillis() && active){ sleep(500) }
         }
     }
 

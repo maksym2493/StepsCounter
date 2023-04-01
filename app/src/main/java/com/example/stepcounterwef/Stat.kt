@@ -12,6 +12,7 @@ import com.example.stepcounterwef.Tools.Companion.getRandomColor
 import com.example.stepcounterwef.Tools.Companion.rewriteDigit
 import com.example.stepcounterwef.Tools.Companion.round
 import com.example.stepcounterwef.Tools.Companion.setBackground
+import com.example.stepcounterwef.Tools.Companion.setFontSettings
 import com.example.stepcounterwef.Tools.Companion.updateView
 import com.example.stepcounterwef.databinding.ActivityStatBinding
 
@@ -124,7 +125,7 @@ class Stat: AppCompatActivity() {
             var target = Data.stats.getTarget(m, d)
             var date = Data.stats.getStringTime(m, d)
 
-            headline.text = date[0][index]
+            headline.text = date[0][index]; setFontSettings(headline, 1)
             if (m == null) {
                 left.visibility = View.GONE; right.visibility = View.GONE
             } else {
@@ -137,9 +138,9 @@ class Stat: AppCompatActivity() {
                             index,
                             -1
                         )
-                    ); right.text = "->"; if (right.visibility == View.GONE) {
-                        right.visibility = View.VISIBLE
-                    }
+                    )
+                    right.text = "->"; setFontSettings(right, 1)
+                    if (right.visibility == View.GONE){ right.visibility = View.VISIBLE }
                 }
                 if ((d == null && m == parentSize) || (d != null && d == parentSize)) {
                     left.visibility = View.GONE
@@ -150,9 +151,9 @@ class Stat: AppCompatActivity() {
                             index,
                             1
                         )
-                    ); left.text = "<-"; if (left.visibility == View.GONE) {
-                        left.visibility = View.VISIBLE
-                    }
+                    )
+                    left.text = "<-"; setFontSettings(left, 1)
+                    if (left.visibility == View.GONE){ left.visibility = View.VISIBLE }
                 }
             }
 
@@ -168,8 +169,8 @@ class Stat: AppCompatActivity() {
                 updateView(progressBar)
             } else{ progressBar.visibility = View.INVISIBLE }
 
-            progressValue.text = "Прогрес: " + round(percent * 100) + " %"
-            averageAndMax.text = "Максимум кроків: " + rewriteDigit(maxValue.toInt()) + ".\nСередня кількість: " + round(value / size.toFloat()) + "."
+            progressValue.text = "Прогрес: " + round(percent * 100) + " %"; setFontSettings(progressValue)
+            averageAndMax.text = "Максимум кроків: " + rewriteDigit(maxValue.toInt()) + ".\nСередня кількість: " + round(value / size.toFloat()) + "."; setFontSettings(averageAndMax)
 
             if(maxValue == 0f){ maxValue = 1f }
 
@@ -178,7 +179,7 @@ class Stat: AppCompatActivity() {
                 var constraintLayout = findViewById<ConstraintLayout>(buttons.getChildAt(count).id)
 
                 var progressView = constraintLayout.getChildAt(1)
-                var button = findViewById<TextView>(constraintLayout.getChildAt(0).id)
+                var button = findViewById<TextView>(constraintLayout.getChildAt(0).id); setFontSettings(button)
 
                 if (skipedCount == 0 && args[index]!! > -1) {
                     value = (diagram.layoutParams.height * (Data.stats.getCount(args[0], args[1], args[2]) / maxValue)).toInt()
