@@ -55,7 +55,7 @@ class MainActivity: AppCompatActivity(){
 
         binding.root.setOnClickListener {
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(binding.root.windowToken, 0)
+            if(inputMethodManager.isActive){ inputMethodManager.hideSoftInputFromWindow(binding.root.windowToken, 0) }
         }
 
         windowSize = (windowManager.defaultDisplay.width - 20 * binding.diagram.layoutParams.height / 200f).toInt()
