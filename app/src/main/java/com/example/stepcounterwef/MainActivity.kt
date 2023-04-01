@@ -351,7 +351,7 @@ class MainActivity: AppCompatActivity(){
                                                         end = true
                                                         newTarget.setText("")
                                                         Data.stats.setTarget(target)
-                                                        Data.stepCounter!!.updateProgress()
+                                                        Data.stepCounter!!.checkProgress((Data.stats.getCount(0, 0) / target) * 100)
                                                         Toast.makeText(this@MainActivity, "Встановлена ціль в " + rewriteDigit(target) + " кроків.", Toast.LENGTH_SHORT).show()
 
                                                         start()
