@@ -117,7 +117,7 @@ class StepCounter: Service(), SensorEventListener, Runnable{
 
         var percent = (count / target) * 100
         if(progress == null){ progress = (percent / 25).toInt() + 1 } else{
-            if(progress != 5 && percent >= progress!! * 25){
+            while(progress != 5 && percent >= progress!! * 25){
                 if(progress != 4){ notify("ProgressNotifications", "Денний прогрес", "Нова мітка!", "Пройдено " + (progress!! * 25).toString() + "% денної цілі!") } else{
                     notify("ProgressNotifications", "Денний прогрес", "Нова мітка!", "Досягнена денна ціль!")
                 }
