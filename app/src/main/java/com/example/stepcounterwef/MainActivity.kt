@@ -351,6 +351,7 @@ class MainActivity: AppCompatActivity(){
                                                         end = true
                                                         newTarget.setText("")
                                                         Data.stats.setTarget(target)
+                                                        Data.stepCounter!!.updateProgress()
                                                         Toast.makeText(this@MainActivity, "Встановлена ціль в " + rewriteDigit(target) + " кроків.", Toast.LENGTH_SHORT).show()
 
                                                         start()
