@@ -52,16 +52,13 @@ class StepCounter: Service(), SensorEventListener, Runnable{
 
         wakeLock.acquire()
         createNotification()
-        startForeground(1, notification.build())
     }
 
     override fun run(){
         while(active){
             if(Data.stats.checkUpdate()){
                 progress = 1
-
                 updateNotification()
-                startForeground(1, notification.build())
             }
 
             var endTime = System.currentTimeMillis() + getDelay()
@@ -113,13 +110,15 @@ class StepCounter: Service(), SensorEventListener, Runnable{
         updateNotification()
     }
 
-    fun updateNotification(){
+    fun updateNotification(newTarget: Boolean = false){
         val count = Data.stats.getCount(0, 0)
         val target = Data.stats.getTarget(0, 0)
         val percent = (count / target) * 100
 
-        checkProgress(percent)
+        checkProgress(percent, newTarget)
         notification.setContentText("Прогрес: " + rewriteDigit(count) + " з " + rewriteDigit(target.toInt()) + " [ " + round(percent) + "% ]")
+
+        startForeground(1, notification.build())
     }
 
     fun checkProgress(percent: Float, newTarget: Boolean = false){
@@ -152,7 +151,6 @@ class StepCounter: Service(), SensorEventListener, Runnable{
                 Data.stats.add(delta)
 
                 updateNotification()
-                startForeground(1, notification.build())
 
                 write()
 
