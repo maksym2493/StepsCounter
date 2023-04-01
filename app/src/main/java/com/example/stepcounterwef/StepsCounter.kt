@@ -56,10 +56,7 @@ class StepCounter: Service(), SensorEventListener, Runnable{
 
     override fun run(){
         while(active){
-            if(Data.stats.checkUpdate()){
-                progress = 1
-                updateNotification()
-            }
+            if(Data.stats.checkUpdate()){ updateNotification() }
 
             var endTime = System.currentTimeMillis() + getDelay()
             while(endTime > System.currentTimeMillis() && active){ sleep(500) }
