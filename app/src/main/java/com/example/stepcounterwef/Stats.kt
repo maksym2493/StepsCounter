@@ -35,7 +35,7 @@ data class Month(var s: String){
     fun getCount(d: Int? = null, h: Int? = null): Int{ if(d != null){ return days[d].getCount(h)} else{ return count!! } }
 
     fun get_last_counts(counts: ArrayList<Int>): ArrayList<Int>{
-        days.forEach{ it.get_last_counts(counts); if(counts.size == 24){ return@forEach } }
+        for(it in days){ it.get_last_counts(counts); if(counts.size == 24){ break } }
 
         return counts
     }
@@ -66,7 +66,7 @@ data class Day(var s: String){
     fun getCount(h: Int? = null): Int{ if(h != null){ return hours[h] } else{ return count!! } }
 
     fun get_last_counts(counts: ArrayList<Int>): ArrayList<Int>{
-        hours.forEach{ counts.add(it); if(counts.size == 24){ return@forEach } }
+        for(it in hours){ counts.add(it); if(counts.size == 24){ break } }
 
         return counts
     }
@@ -280,7 +280,7 @@ data class Stats(var path: File){
 
     fun get_last_counts(): ArrayList<Int>{
         var counts = ArrayList<Int>()
-        stats.forEach{ it.get_last_counts(counts); if(counts.size == 24){ return@forEach } }
+        for(it in stats){ it.get_last_counts(counts); if(counts.size == 24){ break } }
 
         return counts
     }
