@@ -153,11 +153,8 @@ class StepCounter: Service(), SensorEventListener, Runnable{
 
                 write()
 
-                if(Data.main != null){
-                    if(Data.stat != null){ if(Data.stat!!.isActive()){ Data.stat!!.start() } } else{
-                        if(Data.main!!.isActive()){ Data.main!!.start() }
-                    }
-                }
+                if(Data.stat != null){ if(Data.stat!!.isActive()){ Data.stat!!.start() } }
+                if(Data.main != null){ if(Data.main!!.isActive()){ Data.main!!.start() } }
             }
         }
     }
