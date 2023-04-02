@@ -172,12 +172,12 @@ class StepCounter: Service(), SensorEventListener, Runnable{
             val args = f.readText().split(" ")
 
             stepsCountCur = args[0].toInt()
-            stepsCountPrev = args[1].toInt()
-            progress = args[2].toInt()
+            stepsCountPrev = args[0].toInt()
+            progress = args[1].toInt()
         }
     }
 
-    fun write(){ f.writeText(stepsCountCur.toString() + " " + stepsCountPrev.toString() + " " + progress.toString()) }
+    fun write(){ f.writeText(stepsCountCur.toString() + " " + progress.toString()) }
 
     fun getDelay(): Long{
         var i = 1
