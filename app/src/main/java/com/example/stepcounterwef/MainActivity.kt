@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
-import android.provider.MediaStore
 import android.provider.Settings
 import android.view.View
 import android.view.View.OnClickListener
@@ -53,10 +52,7 @@ class MainActivity: AppCompatActivity(){
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.root.setOnClickListener {
-            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            if(inputMethodManager.isActive){ inputMethodManager.hideSoftInputFromWindow(binding.root.windowToken, 0) }
-        }
+        binding.root.setOnClickListener{ removeKeyboard(binding.root) }
 
         windowSize = (windowManager.defaultDisplay.width - 20 * binding.diagram.layoutParams.height / 200f).toInt()
 
@@ -116,6 +112,11 @@ class MainActivity: AppCompatActivity(){
             startServices()
             cheackBateryOptimization()
         }
+    }
+
+    fun removeKeyboard(view: View){
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if(inputMethodManager.isActive){ inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0) }
     }
 
     fun cheackBateryOptimization(){
@@ -335,7 +336,7 @@ class MainActivity: AppCompatActivity(){
                         if(!confirm.hasOnClickListeners()){
                             confirm.setOnClickListener{
                                 var end = false
-                                if(newTarget.text.toString() == ""){ Toast.makeText(this@MainActivity, "Зміна скасована.", Toast.LENGTH_SHORT).show(); end = true } else{
+                                if(newTarget.text.toString() == ""){ removeKeyboard(confirm); Toast.makeText(this@MainActivity, "Зміна скасована.", Toast.LENGTH_SHORT).show(); end = true } else{
                                     try{
                                         var target = newTarget.text.toString().toInt()
                                         if(target <= 0){ Toast.makeText(this@MainActivity, "Ціль не може дорівнювати нулю або бути меншою за нього.", Toast.LENGTH_SHORT).show() } else{
@@ -346,6 +347,8 @@ class MainActivity: AppCompatActivity(){
                                                         newTarget.setText("")
                                                         Data.stats.setTarget(target)
                                                         Data.stepCounter!!.updateNotification()
+
+                                                        removeKeyboard(confirm)
 
                                                         Toast.makeText(this@MainActivity, "Встановлена ціль в " + rewriteDigit(target) + " кроків.", Toast.LENGTH_SHORT).show()
 
@@ -461,20 +464,18 @@ class MainActivity: AppCompatActivity(){
         with(binding){
             if(main.visibility == ConstraintLayout.GONE && (requestPermission.visibility == ConstraintLayout.GONE || permissionTitle.text == "Battery Optimization")){
                 main.visibility = ConstraintLayout.VISIBLE
-
-                if(changeTargetLayout.visibility == ConstraintLayout.VISIBLE){
-                    changeTargetLayout.visibility = ConstraintLayout.GONE
-                }
-
-                if(fontSettings.visibility == ConstraintLayout.VISIBLE){
-                    fontSettings.visibility = ConstraintLayout.GONE
-                }
                 
-                if(requestPermission.visibility == ConstraintLayout.VISIBLE){
-                    requestPermission.visibility = ConstraintLayout.GONE
-                }
+                if(requestPermission.visibility == ConstraintLayout.VISIBLE){ requestPermission.visibility = ConstraintLayout.GONE } else{
+                    if(changeTargetLayout.visibility == ConstraintLayout.VISIBLE){
+                        changeTargetLayout.visibility = ConstraintLayout.GONE
+                    }
 
-                Toast.makeText(this@MainActivity, "Зміна скасована.", Toast.LENGTH_SHORT).show()
+                    if(fontSettings.visibility == ConstraintLayout.VISIBLE){
+                        fontSettings.visibility = ConstraintLayout.GONE
+                    }
+
+                    Toast.makeText(this@MainActivity, "Зміна скасована.", Toast.LENGTH_SHORT).show()
+                }
 
             } else{ super.onBackPressed() }
         }
