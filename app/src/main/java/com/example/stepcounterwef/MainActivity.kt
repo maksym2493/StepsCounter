@@ -459,7 +459,7 @@ class MainActivity: AppCompatActivity(){
 
     override fun onBackPressed() {
         with(binding){
-            if(main.visibility == ConstraintLayout.GONE && requestPermission.visibility == ConstraintLayout.GONE){
+            if(main.visibility == ConstraintLayout.GONE && (requestPermission.visibility == ConstraintLayout.GONE || permissionTitle.text == "Battery Optimization")){
                 main.visibility = ConstraintLayout.VISIBLE
 
                 if(changeTargetLayout.visibility == ConstraintLayout.VISIBLE){
@@ -468,6 +468,10 @@ class MainActivity: AppCompatActivity(){
 
                 if(fontSettings.visibility == ConstraintLayout.VISIBLE){
                     fontSettings.visibility = ConstraintLayout.GONE
+                }
+                
+                if(requestPermission.visibility == ConstraintLayout.VISIBLE){
+                    requestPermission.visibility = ConstraintLayout.GONE
                 }
 
                 Toast.makeText(this@MainActivity, "Зміна скасована.", Toast.LENGTH_SHORT).show()
