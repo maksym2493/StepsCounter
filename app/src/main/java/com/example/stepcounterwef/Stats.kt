@@ -191,17 +191,16 @@ data class Stats(var path: File){
         val delta = (time!! - t)
         var args = arrayOf(
             0,
-            (delta / (3600L * 24 * 1000)).toInt(),
-            count!! - (delta % (3600L * 24 * 1000)).toInt()
+            (delta / (3600L * 24 * 1000)).toInt()
         )
 
         do{
             if(args[1] >= stats[args[0]].getSize()){ args[1] -= stats[args[0]++].getSize() } else{ break }
         } while(args[0] != stats.size)
 
-        if(args[0] == stats.size){ return arrayOf(null, null, null) }
+        if(args[0] == stats.size){ return arrayOf(null, null) }
 
-        return arrayOf(args[0], args[1], args[2])
+        return arrayOf(args[0], args[1])
     }
 
     fun add(c: Int){ stats[0].add(c); write() }
