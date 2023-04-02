@@ -173,8 +173,8 @@ data class Stats(var path: File){
 
         var delta = target - count
         var moduleDelta = delta % 10
-        return if(delta <= 0){ "Ціль досягнута!\nЗроблено: " + rewriteDigit(count) + " з " + rewriteDigit(target) + " [ " + round((count / target.toFloat()) * 100) + "% ]" } else{
-            "Не вистачило " + rewriteDigit(delta) + "-" + if(moduleDelta == 1){ "го" } else{ if(moduleDelta in arrayOf(2, 3, 4)){ "х" } else{ "ти" } } + " крок" + if(moduleDelta != 1){ "ів" } else{ "а" } + " [ " + round((count / target.toFloat()) * 100) + "% ]"
+        return if(delta <= 0){ "Ціль досягнута!\nЗроблено кроків: " + rewriteDigit(count) + " [ " + round((count / target.toFloat()) * 100) + "% ]" } else{
+            "Не вистачило кроків: " + rewriteDigit(delta) + " [ " + round((count / target.toFloat()) * 100) + "% ]"
         }
     }
 
