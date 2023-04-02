@@ -17,7 +17,7 @@ import java.util.*
 
 class Tools{
     companion object{
-        var notificationId = 3
+        var notificationId = 2
         val monthes = arrayOf(
             arrayOf("Jan", "Січень"),
             arrayOf("Feb", "Лютий"),
