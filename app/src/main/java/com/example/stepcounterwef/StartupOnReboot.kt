@@ -7,7 +7,17 @@ import androidx.core.content.ContextCompat
 
 class StartupOnReboot: BroadcastReceiver(){
     override fun onReceive(context: Context, intent: Intent) {
-        if(ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED){
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        var channelPermission = false
+        val notificationPermission = notificationManager.areNotificationsEnabled()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            val channel = notificationManager.getNotificationChannel("DailyTarget")
+            channelPermission = (channel != null && channel.importance != NotificationManager.IMPORTANCE_NONE) || channel == null
+        }
+        
+        if(notificationPermission && channelPermission && ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED){
             Data.init(context.filesDir)
             ContextCompat.startForegroundService(context, Intent(context, StepCounter::class.java))
         }
