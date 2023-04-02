@@ -101,7 +101,7 @@ class Tools{
 
         fun removeNotification(intent: Intent): Boolean{
             val notificationId = intent.getIntExtra("notificationId", 0)
-            if(notificationId != 0){
+            if(notificationId != 0 && notificationId != 1){
                 val notificationManager = Data.stepCounter!!.getSystemService(NotificationManager::class.java)
 
                 for(notification in notificationManager.activeNotifications){
