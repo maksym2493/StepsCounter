@@ -96,7 +96,7 @@ class StepCounter: Service(), SensorEventListener, Runnable{
         }
 
         var intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
         notification = NotificationCompat.Builder(this, "DailyTarget")
             .setSound(null)
