@@ -180,18 +180,6 @@ class MainActivity: AppCompatActivity(){
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    fun getPath(uri: Uri): String{
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = contentResolver.query(uri, projection, null, null, null)
-        var columnIndex = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-
-        cursor!!.moveToFirst()
-        val filePath = cursor!!.getString(columnIndex)
-
-        cursor.close()
-        return filePath
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray){
         cheackActivityRecognitionPermittion()
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
