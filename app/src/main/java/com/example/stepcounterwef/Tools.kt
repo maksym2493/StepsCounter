@@ -60,12 +60,17 @@ class Tools{
             return res
         }
 
+        fun charToInt(char: Char): Int{
+            var i = 0
+            do{ if(i.toString() == char){ return i } } while(++i != 10)
+        }
+
         fun round(x: Float, y: Int = 2): String{
             var y = pow(10, y).toFloat()
             var x = x * y
 
             var add = 0
-            (x - x.toInt()).toString().substring(2).forEach{ if(it.toInt() >= 5){ add = 1; return@forEach }; if(it != '4'){ return@forEach } }
+            (x - x.toInt()).toString().substring(2).forEach{ if(charToInt(it) >= 5){ add = 1; return@forEach }; if(it != '4'){ return@forEach } }
 
             x = (x.toInt() + add) / y
             return rewriteDigit(x.toInt()) + "." + ((x - x.toInt()) * y).toInt().toString().trimEnd('0').trimEnd('.')
