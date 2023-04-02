@@ -17,7 +17,9 @@ class StartupOnReboot: BroadcastReceiver(){
             channelPermission = (channel != null && channel.importance != NotificationManager.IMPORTANCE_NONE) || channel == null
         }
         
-        if(notificationPermission && channelPermission && ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED){
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+
+        if(!powerManager.isIgnoringBatteryOptimizations(packageName) && notificationPermission && channelPermission && ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED){
             Data.init(context.filesDir)
             ContextCompat.startForegroundService(context, Intent(context, StepCounter::class.java))
         }
