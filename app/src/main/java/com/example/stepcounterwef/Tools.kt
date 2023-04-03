@@ -64,21 +64,9 @@ class Tools{
             var y = pow(10, y).toFloat()
             var x = x * y
 
-            var add = 0
-            val list = arrayOf('5', '6', '7', '8', '9')
+            if(x - x.toInt() >= 0.5f){ x += 1 }
 
-            for (char in x.toString().substringAfter(".")) {
-                if (char in list) {
-                    add = 1
-                    break
-                }
-                
-                if (char != '4') {
-                    break
-                }
-            }
-
-            x = (x.toInt() + add) / y
+            x = x.toInt() / y
             return (rewriteDigit(x.toInt()) + "." + (y + (x - x.toInt()) * y).toInt().toString().substring(1)).trimEnd('0').trimEnd('.')
         }
 
