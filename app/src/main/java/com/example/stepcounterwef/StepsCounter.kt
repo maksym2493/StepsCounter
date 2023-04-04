@@ -88,7 +88,7 @@ class StepCounter: Service(), SensorEventListener, Runnable{
             val channel = NotificationChannel(
                 "DailyTarget",
                 "Денна ціль",
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_LOW
             )
 
             val manager = getSystemService(NotificationManager::class.java)
