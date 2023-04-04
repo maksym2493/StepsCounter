@@ -467,6 +467,7 @@ class MainActivity: AppCompatActivity(){
                 
                 if(requestPermission.visibility == ConstraintLayout.VISIBLE){ requestPermission.visibility = ConstraintLayout.GONE } else{
                     if(changeTargetLayout.visibility == ConstraintLayout.VISIBLE){
+                        newTarget.setText("")
                         changeTargetLayout.visibility = ConstraintLayout.GONE
                     }
 
