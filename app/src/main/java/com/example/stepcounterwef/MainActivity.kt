@@ -331,6 +331,9 @@ class MainActivity: AppCompatActivity(){
                         main.visibility = ConstraintLayout.GONE
                         changeTargetLayout.visibility = ConstraintLayout.VISIBLE
 
+                        val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+
                         setFontSettings(changeTargetHeadline, 1)
 
                         if(!confirm.hasOnClickListeners()){
