@@ -345,7 +345,7 @@ class MainActivity: AppCompatActivity(){
                                         var target = newTarget.text.toString().toInt()
                                         if(target <= 0){ Toast.makeText(this@MainActivity, "Ціль не може дорівнювати нулю або бути меншою за нього.", Toast.LENGTH_SHORT).show() } else{
                                             if(target > 100000){ Toast.makeText(this@MainActivity, "Ціль не може більшо за 100 000.", Toast.LENGTH_SHORT).show() } else{
-                                                if(target % 10 != 0){ Toast.makeText(this@MainActivity, "Ціль повинна націло ділитися на 10.", Toast.LENGTH_SHORT).show() } else{
+                                                if(target % 1000 != 0){ Toast.makeText(this@MainActivity, "Ціль повинна націло ділитися на 1 000.", Toast.LENGTH_SHORT).show() } else{
                                                     if(Data.stats.getTarget(0, 0).toInt() == target){ Toast.makeText(this@MainActivity, "Вказана ціль є поточною.", Toast.LENGTH_SHORT).show() } else{
                                                         end = true
                                                         newTarget.setText("")
