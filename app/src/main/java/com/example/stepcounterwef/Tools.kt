@@ -60,14 +60,14 @@ class Tools{
             return res
         }
 
-        fun round(x: Float, y: Int = 2): String{
-            var y = pow(10, y).toFloat()
+        fun round(x: Float, count: Int = 2): String{
+            var y =  pow(10, count)
             var x = x * y
 
-            if(x - x.toInt() >= 0.5f){ x += 1 }
+            if((x * 10).toInt() % 10 >= 5){ x += 1 }
 
-            x = x.toInt() / y
-            return (rewriteDigit(x.toInt()) + "." + (y + (x - x.toInt()) * y).toInt().toString().substring(1)).trimEnd('0').trimEnd('.')
+            var res = x.toInt()
+            return (rewriteDigit((x / y).toInt()) + "." + res.toString().takeLast(count)).trimEnd('0').trimEnd('.')
         }
 
         fun notify(id: String, name: String, title: String, text: String, intent: Intent = Intent(Data.stepCounter, MainActivity::class.java)){
