@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.example.stepcounterwef.Tools.Companion.notify
 import com.example.stepcounterwef.Tools.Companion.pow
@@ -56,10 +57,10 @@ class StepCounter: Service(), SensorEventListener, Runnable{
 
     override fun run(){
         while(active){
-            if(Data.stats.checkUpdate()){ updateNotification() }
-
-            var endTime = System.currentTimeMillis() + getDelay()
+            val endTime = System.currentTimeMillis() + getDelay()
             while(endTime > System.currentTimeMillis() && active){ sleep(500) }
+
+            if(Data.stats.checkUpdate()){ updateNotification() }
         }
     }
 

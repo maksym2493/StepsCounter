@@ -8,6 +8,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.PowerManager
 import androidx.core.content.ContextCompat
+import java.io.File
+import java.util.*
 
 class StartupOnReboot: BroadcastReceiver(){
     override fun onReceive(context: Context, intent: Intent) {
@@ -20,11 +22,9 @@ class StartupOnReboot: BroadcastReceiver(){
             val channel = notificationManager.getNotificationChannel("DailyTarget")
             channelPermission = (channel != null && channel.importance != NotificationManager.IMPORTANCE_NONE) || channel == null
         }
-        
-        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
 
-        if(!powerManager.isIgnoringBatteryOptimizations(context.packageName) && notificationPermission && channelPermission
-           && ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED){
+        if(notificationPermission && channelPermission
+            && ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED){
             Data.init(context.filesDir)
             ContextCompat.startForegroundService(context, Intent(context, StepCounter::class.java))
         }
