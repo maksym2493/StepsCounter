@@ -10,6 +10,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
+import android.text.Editable
+import android.text.InputType
+import android.text.TextWatcher
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.inputmethod.InputMethodManager
@@ -326,6 +329,36 @@ class MainActivity: AppCompatActivity(){
                     startActivityForResult(intent, 2)
                 }
 
+                newTarget.addTextChangedListener(object: TextWatcher{
+                    var canUpdate = false
+
+                    override fun beforeTextChanged(s: CharSequence, p1: Int, p2: Int, p3: Int){}
+
+                    override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int){
+                        val length = newTarget.length()
+
+                        if(length != 0){
+                            var s = s!!
+
+                            try{
+                                s.get(s.lastIndex).toString().toInt()
+                                if(length > 3 && canUpdate){
+                                    var digit = s.replace("\\s".toRegex(), "").toInt()
+
+                                    if(digit <= 100000){
+                                        canUpdate = false
+                                        newTarget.setText(rewriteDigit(digit))
+                                    } else{ newTarget.setText("100 000") }
+                                }
+                            } catch(_: Exception){ clear(s) }
+                        }
+                    }
+
+                    override fun afterTextChanged(p0: Editable?){ canUpdate = true; newTarget.setSelection(newTarget.length()) }
+
+                    fun clear(s: CharSequence){ newTarget.setText(s.substring(0, s.length - 1)) }
+                })
+
                 changeTarget.setOnClickListener{
                     with(binding){
                         main.visibility = ConstraintLayout.GONE
@@ -341,27 +374,23 @@ class MainActivity: AppCompatActivity(){
                             confirm.setOnClickListener{
                                 var end = false
                                 if(newTarget.text.toString() == ""){ removeKeyboard(confirm); Toast.makeText(this@MainActivity, "Зміна скасована.", Toast.LENGTH_SHORT).show(); end = true } else{
-                                    try{
-                                        var target = newTarget.text.toString().toInt()
-                                        if(target <= 0){ Toast.makeText(this@MainActivity, "Ціль не може дорівнювати нулю або бути меншою за нього.", Toast.LENGTH_SHORT).show() } else{
-                                            if(target > 100000){ Toast.makeText(this@MainActivity, "Ціль не може більшо за 100 000.", Toast.LENGTH_SHORT).show() } else{
-                                                if(target % 1000 != 0){ Toast.makeText(this@MainActivity, "Ціль повинна націло ділитися на 1 000.", Toast.LENGTH_SHORT).show() } else{
-                                                    if(Data.stats.getTarget(0, 0).toInt() == target){ Toast.makeText(this@MainActivity, "Вказана ціль є поточною.", Toast.LENGTH_SHORT).show() } else{
-                                                        end = true
-                                                        newTarget.setText("")
-                                                        Data.stats.setTarget(target)
-                                                        Data.stepCounter!!.updateNotification()
+                                    var target = newTarget.text.toString().replace("\\s".toRegex(), "").toInt()
+                                    if(target <= 0){ Toast.makeText(this@MainActivity, "Ціль не може дорівнювати нулю або бути меншою за нього.", Toast.LENGTH_SHORT).show() } else{
+                                        if(target % 1000 != 0){ Toast.makeText(this@MainActivity, "Ціль повинна націло ділитися на 1 000.", Toast.LENGTH_SHORT).show() } else{
+                                            if(Data.stats.getTarget(0, 0).toInt() == target){ Toast.makeText(this@MainActivity, "Вказана ціль є поточною.", Toast.LENGTH_SHORT).show() } else{
+                                                end = true
+                                                newTarget.setText("")
+                                                Data.stats.setTarget(target)
+                                                Data.stepCounter!!.updateNotification()
 
-                                                        removeKeyboard(confirm)
+                                                removeKeyboard(confirm)
 
-                                                        Toast.makeText(this@MainActivity, "Встановлена ціль в " + rewriteDigit(target) + " кроків.", Toast.LENGTH_SHORT).show()
+                                                Toast.makeText(this@MainActivity, "Встановлена ціль в " + rewriteDigit(target) + " кроків.", Toast.LENGTH_SHORT).show()
 
-                                                        start()
-                                                    }
-                                                }
+                                                start()
                                             }
                                         }
-                                    } catch(e: Exception){ Toast.makeText(this@MainActivity, "Введіть ціле число.", Toast.LENGTH_SHORT).show() }
+                                    }
                                 }
 
                                 if(end){
