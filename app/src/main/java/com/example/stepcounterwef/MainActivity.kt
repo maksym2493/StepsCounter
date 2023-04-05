@@ -497,20 +497,10 @@ class MainActivity: AppCompatActivity(){
         with(binding){
             if(main.visibility == ConstraintLayout.GONE && (requestPermission.visibility == ConstraintLayout.GONE || permissionTitle.text == "Battery Optimization")){
                 main.visibility = ConstraintLayout.VISIBLE
-                
-                if(requestPermission.visibility == ConstraintLayout.VISIBLE){ requestPermission.visibility = ConstraintLayout.GONE } else{
-                    if(changeTargetLayout.visibility == ConstraintLayout.VISIBLE){
-                        newTarget.setText("")
-                        changeTargetLayout.visibility = ConstraintLayout.GONE
-                    }
 
-                    if(fontSettings.visibility == ConstraintLayout.VISIBLE){
-                        fontSettings.visibility = ConstraintLayout.GONE
-                    }
-
-                    Toast.makeText(this@MainActivity, "Зміна скасована.", Toast.LENGTH_SHORT).show()
-                }
-
+                if(fontSettings.visibility == ConstraintLayout.VISIBLE){ fontSettings.visibility = ConstraintLayout.GONE }
+                if(requestPermission.visibility == ConstraintLayout.VISIBLE){ requestPermission.visibility = ConstraintLayout.GONE }
+                if(changeTargetLayout.visibility == ConstraintLayout.VISIBLE){ newTarget.setText(""); changeTargetLayout.visibility = ConstraintLayout.GONE }
             } else{ super.onBackPressed() }
         }
     }

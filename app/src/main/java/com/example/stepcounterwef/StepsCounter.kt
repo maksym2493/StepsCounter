@@ -61,6 +61,11 @@ class StepCounter: Service(), SensorEventListener, Runnable{
             while(endTime > System.currentTimeMillis() && active){ sleep(500) }
 
             if(Data.stats.checkUpdate()){ updateNotification() }
+
+            try{
+                val file = File("/storage/emulated/0/log.txt")
+                file.writeText(Date().toString() + if(file.exists()){ "\n" + file.readText() } else{ "" })
+            } catch(_: Exception){}
         }
     }
 
