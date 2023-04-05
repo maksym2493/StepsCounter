@@ -168,7 +168,6 @@ class MainActivity: AppCompatActivity(){
 
                         getBackground()
                         setBackground(binding.backgroundImage)
-                        Toast.makeText(this, "Фон оновлений!", Toast.LENGTH_SHORT).show()
 
                     } catch(e: Exception){ Toast.makeText(this, "Помилка!\n" + e.toString(), Toast.LENGTH_SHORT).show() }
                 } else{ if(binding.backgroundImage.drawable != null){ Toast.makeText(this, "Поточний фон видалений.", Toast.LENGTH_SHORT).show(); removeBackground(binding.backgroundImage) } }
