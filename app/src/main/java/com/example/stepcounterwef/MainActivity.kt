@@ -171,11 +171,7 @@ class MainActivity: AppCompatActivity(){
                         Toast.makeText(this, "Фон оновлений!", Toast.LENGTH_SHORT).show()
 
                     } catch(e: Exception){ Toast.makeText(this, "Помилка!\n" + e.toString(), Toast.LENGTH_SHORT).show() }
-                } else{
-                    var text = "Встановлення фону скасоване."
-                    if(binding.backgroundImage.drawable != null){ text = "Поточний фон видалений."; removeBackground(binding.backgroundImage) }
-                    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-                }
+                } else{ if(binding.backgroundImage.drawable != null){ Toast.makeText(this, "Поточний фон видалений.", Toast.LENGTH_SHORT).show(); removeBackground(binding.backgroundImage) } }
             } else{
                 if(requestCode == 3){ checkNotificationPermission() }
             }
