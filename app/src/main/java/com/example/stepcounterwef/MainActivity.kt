@@ -239,7 +239,7 @@ class MainActivity: AppCompatActivity(){
             exp.text = rewriteDigit(expLevel[0]) + " з " + rewriteDigit(expLevel[1]) + " [ " + round(progress * 100) + " % ]"; setFontSettings(exp)
 
             var width = (progress * windowSize!!).toInt()
-            if(width != 0){ levelProgress.layoutParams.width = width; levelProgress.setBackgroundColor(Color.parseColor(getRandomColor())); updateView(levelProgress) } else{ levelProgress.visibility = View.INVISIBLE }
+            if(width != 0){ levelProgress.layoutParams.width = width; levelProgress.setBackgroundColor(Color.parseColor(getRandomColor())); if(levelProgress.visibility == View.INVISIBLE){ levelProgress.visibility = View.VISIBLE }; updateView(levelProgress) } else{ levelProgress.visibility = View.INVISIBLE }
 
             showTargets()
             drawDiagram()
