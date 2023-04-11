@@ -172,8 +172,7 @@ data class Stats(var path: File){
         var target = getTarget(m, d).toInt()
 
         var delta = target - count
-        var moduleDelta = delta % 10
-        return if(delta <= 0){ "Ціль досягнута!\nЗроблено кроків: " + rewriteDigit(count) + " [ " + round((count / target.toFloat()) * 100) + "% ]" } else{
+        return if(delta <= 0){ "Зроблено кроків: " + rewriteDigit(count) + " [ " + round((count / target.toFloat()) * 100) + "% ]" } else{
             "Не вистачило кроків: " + rewriteDigit(delta) + " [ " + round((count / target.toFloat()) * 100) + "% ]"
         }
     }

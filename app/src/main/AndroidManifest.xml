@@ -24,7 +24,7 @@
         android:theme="@style/Theme.StepCounter"
         tools:targetApi="31">
 
-        <service android:name=".StepCounter" />
+        <service android:name=".StepCounter" android:enabled="true" android:exported="false" android:foregroundServiceType="dataSync" />
         <receiver
             android:name="com.example.stepcounterwef.StartupOnReboot"
             android:exported="true">

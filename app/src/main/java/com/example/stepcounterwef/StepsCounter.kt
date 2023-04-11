@@ -72,7 +72,7 @@ class StepCounter: Service(), SensorEventListener, Runnable{
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if(!active){ active = true; Thread(this).start(); sensorManager.registerListener(this, stepCounterSensor, SensorManager.SENSOR_DELAY_NORMAL) }
 
-        return START_STICKY
+        return START_REDELIVER_INTENT
     }
 
     override fun onDestroy() {
@@ -121,7 +121,7 @@ class StepCounter: Service(), SensorEventListener, Runnable{
 
         checkProgress(percent)
         notification.setContentText("Прогрес: " + rewriteDigit(count) + " з " + rewriteDigit(target.toInt()) + " [ " + round(percent) + "% ]")
-
+        
         startForeground(1, notification.build())
     }
 
@@ -188,7 +188,7 @@ class StepCounter: Service(), SensorEventListener, Runnable{
         var delay = 0L
         Date().toString().split(" ")[3].split(":").subList(1, 3).forEach{ delay += it.toLong() * pow(60, i--) * 1000 }
 
-        var maxValue = (60 * 30 * 1000L)
+        var maxValue = (30 * 60 * 1000L)
         return maxValue - delay % maxValue
     }
 }
